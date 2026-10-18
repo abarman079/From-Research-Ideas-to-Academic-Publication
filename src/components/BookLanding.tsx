@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ArrowRight, ArrowUpRight, BookOpen, Check,
   ChevronLeft, ChevronRight, ExternalLink, Maximize2,
-  Menu, X, ZoomIn,
+  Menu, X, ZoomIn, ZoomOut, RotateCcw,
 } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -63,6 +63,9 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [readerOpen, setReaderOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
+  const [readerZoom, setReaderZoom] = useState(1);
+  const readerScrollport = useRef<HTMLDivElement>(null);
+  const startX = useRef<number | null>(null);
   const [journeyActive, setJourneyActive] = useState(0);
   const [topicFilter, setTopicFilter] = useState<TopicFilter>('all');
   const lastTrigger = useRef<HTMLElement | null>(null);
@@ -116,13 +119,13 @@ export default function BookLanding({ locale }: { locale: Locale }) {
     document.body.style.overflow = 'hidden';
     closeButton.current?.focus();
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') { setLightboxOpen(false); setReaderOpen(false); }
+      if (event.key === 'Escape') closeModal();
       if (event.key === 'ArrowRight') {
-        if (readerOpen) setPreviewIndex((i) => Math.min(previewPages.length - 1, i + 1));
+        if (readerOpen) { setPreviewIndex((i) => Math.min(previewPages.length - 1, i + 1)); setReaderZoom(1); }
         else setPhotoIndex((i) => (i + 1) % gallery.length);
       }
       if (event.key === 'ArrowLeft') {
-        if (readerOpen) setPreviewIndex((i) => Math.max(0, i - 1));
+        if (readerOpen) { setPreviewIndex((i) => Math.max(0, i - 1)); setReaderZoom(1); }
         else setPhotoIndex((i) => (i - 1 + gallery.length) % gallery.length);
       }
       if (event.key === 'Tab') {
@@ -149,6 +152,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   const openReader = (trigger?: HTMLElement) => {
     lastTrigger.current = trigger ?? null;
     setPreviewIndex(0);
+    setReaderZoom(1);
     setReaderOpen(true);
   };
   const openGallery = (trigger: HTMLElement) => {
@@ -156,6 +160,15 @@ export default function BookLanding({ locale }: { locale: Locale }) {
     setLightboxOpen(true);
   };
   const galleryMove = (direction: number) => setPhotoIndex((i) => (i + direction + gallery.length) % gallery.length);
+  const goToPreview = (index: number) => {
+    setPreviewIndex(Math.max(0, Math.min(previewPages.length - 1, index)));
+    setReaderZoom(1);
+    if (readerScrollport.current) {
+      readerScrollport.current.scrollTop = 0;
+      readerScrollport.current.scrollLeft = 0;
+    }
+  };
+  const zoomPreview = (delta: number) => setReaderZoom((z) => Math.max(1, Math.min(2.5, Math.round((z + delta) * 10) / 10)));
   const closeModal = () => { setReaderOpen(false); setLightboxOpen(false); };
   const currentImage = gallery[photoIndex];
   const activeScene = t.journey.scenes[journeyActive];
@@ -399,6 +412,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
             <div className="sample-copy reveal"><span className="kicker">{t.sample.eyebrow}</span><h2>{t.sample.title}<br /><em>{t.sample.accent}</em></h2><p>{t.sample.intro}</p>
               <button type="button" className="btn btn-dark" onClick={(e) => openReader(e.currentTarget)}><BookOpen size={18} aria-hidden="true" /> {t.sample.action} <ArrowRight size={17} aria-hidden="true" /></button>
               <div className="sample-assurance"><Check size={17} aria-hidden="true" /> {t.sample.assurance}</div>
+              <p className="sample-edition-note">{t.sample.editionNote}</p>
             </div>
             <button type="button" className="sample-showcase reveal" onClick={(e) => openReader(e.currentTarget)} aria-label={t.sample.open}>
               <span className="sample-sheet"><Photo src={previewPages[0].src} alt={t.sample.photoAlt} unavailableText={t.general.unavailable} sizes="(max-width: 780px) 82vw, 35vw" /></span>
@@ -413,7 +427,18 @@ export default function BookLanding({ locale }: { locale: Locale }) {
           <div className="section-heading reveal"><h2>{t.details.title} <em>{t.details.accent}</em></h2></div>
           <div className="details-grid reveal">
             <div className="spec-list"><div><span>{t.details.name}</span><strong>{locale === 'bn' ? book.title : book.englishTitle}</strong></div><div><span>{t.details.author}</span><strong>{locale === 'bn' ? book.author : book.authorEnglish}</strong></div><div><span>{t.details.pages}</span><strong>{book.pageCount}</strong></div><div><span>{t.details.language}</span><strong>{t.details.languageValue}</strong></div><div><span>ISBN</span><strong>{book.isbn}</strong></div><div><span>{t.details.imprint}</span><strong>LANIENT COMMUNICATION</strong></div></div>
-            <div className="order-panel"><span className="micro-label">{t.details.orderKicker}</span><h3>{t.details.orderTitle}<br /> {t.details.orderAccent}</h3><p>{t.details.orderInfo}</p><a className="btn btn-gold" href={book.productUrl} target="_blank" rel="noopener noreferrer">{t.details.orderButton} <ArrowUpRight size={17} /></a><div className="order-footnotes"><span><BookOpen size={14} /> {t.details.printFootnote}</span><span><ExternalLink size={14} /> {t.details.listingFootnote}</span></div></div>
+            <div className="order-panel">
+              <span className="micro-label">{t.details.orderKicker}</span>
+              <h3>{t.details.orderTitle}<br /> {t.details.orderAccent}</h3>
+              <p>{t.details.orderInfo}</p>
+              <div className="order-checklist" aria-label={t.details.purchaseHeading}>
+                <h4>{t.details.purchaseHeading}</h4>
+                <ol>{t.details.purchaseSteps.map((step, index) => <li key={index}><span>0{index + 1}</span><span>{step}</span></li>)}</ol>
+              </div>
+              <a className="btn btn-gold order-primary-action" href={book.productUrl} target="_blank" rel="noopener noreferrer">{t.details.orderButton} <ArrowUpRight size={17} /></a>
+              <p className="order-external-note"><ExternalLink size={14} aria-hidden="true" />{t.details.checkoutNote}</p>
+              <div className="order-footnotes"><span><BookOpen size={14} /> {t.details.printFootnote}</span><span><ExternalLink size={14} /> {t.details.listingFootnote}</span></div>
+            </div>
           </div>
         </div></section>
 
@@ -436,11 +461,55 @@ export default function BookLanding({ locale }: { locale: Locale }) {
         </div>
       )}
       {readerOpen && (
-        <div className="modal-shade" onMouseDown={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
-          <div className="modal-panel reader-modal" role="dialog" aria-modal="true" aria-labelledby="reader-modal-heading">
-            <div className="modal-header"><div><span>{t.sample.readerKicker}</span><h2 id="reader-modal-heading">{t.sample.readerTitle}</h2></div><button type="button" ref={closeButton} className="modal-close" onClick={closeModal} aria-label={t.general.closePreview}><X /></button></div>
-            <div className="reader-page"><Photo src={previewPages[previewIndex].src} alt={`${t.sample.previewAlt} ${previewIndex + 1}`} unavailableText={t.general.unavailable} sizes="(max-width: 780px) 96vw, 800px" /></div>
-            <div className="modal-controls"><button type="button" disabled={previewIndex === 0} onClick={() => setPreviewIndex((i) => Math.max(0, i - 1))}><ChevronLeft size={19}/> {t.general.previousPage}</button><span>{t.sample.page} {previewIndex + 1} / {previewPages.length}</span><button type="button" disabled={previewIndex === previewPages.length - 1} onClick={() => setPreviewIndex((i) => Math.min(previewPages.length - 1, i + 1))}>{t.general.nextPage} <ChevronRight size={19}/></button></div>
+        <div className="modal-shade reader-shade" onMouseDown={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
+          <div className="modal-panel reader-modal reader-modal-v4" role="dialog" aria-modal="true" aria-labelledby="reader-modal-heading" aria-describedby="reader-modal-description">
+            <div className="modal-header reader-modal-header">
+              <div><span>{t.sample.readerKicker}</span><h2 id="reader-modal-heading">{t.sample.readerTitle}</h2><p id="reader-modal-description">{t.sample.readerDescription}</p></div>
+              <button type="button" ref={closeButton} className="modal-close" onClick={closeModal} aria-label={t.general.closePreview}><X size={21} aria-hidden="true" /></button>
+            </div>
+            <div className="reader-utility-bar">
+              <span className="reader-page-position" aria-live="polite">{t.sample.page} {previewIndex + 1} / {previewPages.length}</span>
+              <div className="reader-zoom-tools" role="group" aria-label={t.sample.zoomTools}>
+                <button type="button" onClick={() => zoomPreview(-0.25)} disabled={readerZoom <= 1} aria-label={t.sample.zoomOut} title={t.sample.zoomOut}><ZoomOut size={18} aria-hidden="true" /></button>
+                <span aria-live="polite">{Math.round(readerZoom * 100)}%</span>
+                <button type="button" onClick={() => zoomPreview(0.25)} disabled={readerZoom >= 2.5} aria-label={t.sample.zoomIn} title={t.sample.zoomIn}><ZoomIn size={18} aria-hidden="true" /></button>
+                <button type="button" onClick={() => { setReaderZoom(1); if(readerScrollport.current){readerScrollport.current.scrollLeft=0; readerScrollport.current.scrollTop=0;} }} disabled={readerZoom === 1} aria-label={t.sample.resetZoom} title={t.sample.resetZoom}><RotateCcw size={16} aria-hidden="true" /></button>
+              </div>
+            </div>
+            <div className="reader-body">
+              <div className="reader-reading-area">
+                <div className="reader-scrollport" ref={readerScrollport} tabIndex={0} role="region" aria-label={t.sample.readerViewport}
+                  onTouchStart={(event) => { startX.current = event.touches[0]?.clientX ?? null; }}
+                  onTouchEnd={(event) => { const endX = event.changedTouches[0]?.clientX; if (readerZoom === 1 && startX.current !== null && typeof endX === 'number') { const movement = endX - startX.current; if(Math.abs(movement) > 75) goToPreview(previewIndex + (movement < 0 ? 1 : -1)); } startX.current = null; }}>
+                  <div className="reader-zoom-sheet" style={{ width: `${readerZoom * 100}%`, height: `calc(var(--reader-base-height) * ${readerZoom})` }}>
+                    <Photo src={previewPages[previewIndex].src} alt={`${t.sample.previewAlt} ${previewIndex + 1}`} unavailableText={t.general.unavailable} sizes="(max-width: 780px) 100vw, 1100px" />
+                  </div>
+                </div>
+                <p className="reader-tip">{t.sample.readerTip}</p>
+              </div>
+              <aside className="reader-side" aria-label={t.sample.readerNavigation}>
+                <div className="reader-side-heading"><span className="micro-label">{t.sample.previewTag}</span><p>{t.sample.originalLanguageNotice}</p></div>
+                <div className="reader-thumbs" role="group" aria-label={t.sample.readerNavigation}>
+                  {previewPages.map((item, index) => (
+                    <button type="button" key={item.src} className={`reader-thumb${index === previewIndex ? ' is-selected' : ''}`}
+                      aria-pressed={index === previewIndex} aria-label={`${t.sample.page} ${index + 1}`} onClick={() => goToPreview(index)}>
+                      <span className="reader-thumb-image"><Photo src={item.src} alt="" unavailableText={t.general.unavailable} sizes="100px" /></span>
+                      <span>{locale === 'bn' ? ['১','২','৩','৪','৫'][index] : index + 1}</span>
+                    </button>
+                  ))}
+                </div>
+                <div className="reader-conversion">
+                  <span className="micro-label">{t.sample.readerPurchaseKicker}</span>
+                  <p>{t.sample.readerPurchaseText}</p>
+                  <a href={book.productUrl} target="_blank" rel="noopener noreferrer">{t.sample.readerOrder} <ArrowUpRight size={16} aria-hidden="true" /></a>
+                </div>
+              </aside>
+            </div>
+            <div className="modal-controls reader-modal-controls">
+              <button type="button" disabled={previewIndex === 0} onClick={() => goToPreview(previewIndex - 1)}><ChevronLeft size={19} aria-hidden="true" /> {t.general.previousPage}</button>
+              <span>{previewIndex + 1} / {previewPages.length}</span>
+              <button type="button" disabled={previewIndex === previewPages.length - 1} onClick={() => goToPreview(previewIndex + 1)}>{t.general.nextPage} <ChevronRight size={19} aria-hidden="true" /></button>
+            </div>
           </div>
         </div>
       )}

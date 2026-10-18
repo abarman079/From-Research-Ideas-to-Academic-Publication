@@ -59,6 +59,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   const router = useRouter();
   const root = useRef<HTMLDivElement>(null);
   const [navOpen, setNavOpen] = useState(false);
+  const mobileMenuButton = useRef<HTMLButtonElement>(null);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [readerOpen, setReaderOpen] = useState(false);
@@ -111,6 +112,19 @@ export default function BookLanding({ locale }: { locale: Locale }) {
     });
     return () => { mm.revert(); stageContext.revert(); };
   }, []);
+
+  // Mobile navigation can be dismissed with Escape without losing keyboard focus.
+  useEffect(() => {
+    if (!navOpen) return;
+    const dismissMenu = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setNavOpen(false);
+        mobileMenuButton.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', dismissMenu);
+    return () => window.removeEventListener('keydown', dismissMenu);
+  }, [navOpen]);
 
   useEffect(() => {
     const modalOpen = lightboxOpen || readerOpen;
@@ -212,7 +226,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
             <span className="wordmark-title">IOJH<span>.</span></span>
             <span className="wordmark-subtitle">{t.nav.subtitle}</span>
           </a>
-          <nav className={`primary-nav${navOpen ? ' is-open' : ''}`} aria-label={t.nav.main}>
+          <nav id="primary-navigation" className={`primary-nav${navOpen ? ' is-open' : ''}`} aria-label={t.nav.main}>
             <a href="#about" onClick={() => setNavOpen(false)}>{t.nav.about}</a>
             <a href="#journey" onClick={() => setNavOpen(false)}>{t.nav.journey}</a>
             <a href="#inside" onClick={() => setNavOpen(false)}>{t.nav.inside}</a>
@@ -227,7 +241,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
             <a className="header-order" href={book.productUrl} target="_blank" rel="noopener noreferrer">
               {t.nav.order} <ArrowUpRight size={15} aria-hidden="true" />
             </a>
-            <button className="menu-toggle" type="button" aria-label={navOpen ? t.nav.closeMenu : t.nav.openMenu} aria-expanded={navOpen} onClick={() => setNavOpen(!navOpen)}>
+            <button ref={mobileMenuButton} className="menu-toggle" type="button" aria-label={navOpen ? t.nav.closeMenu : t.nav.openMenu} aria-expanded={navOpen} aria-controls="primary-navigation" onClick={() => setNavOpen(!navOpen)}>
               {navOpen ? <X size={21} /> : <Menu size={21} />}
             </button>
           </div>

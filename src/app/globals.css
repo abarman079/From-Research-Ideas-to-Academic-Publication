@@ -623,3 +623,37 @@ html[lang="en"] .hero-title { font-size: clamp(42px, 4.7vw, 72px); }
 @media (prefers-reduced-motion: reduce) {
   .reader-thumb, .reader-modal-v4 * { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+
+/* BATCH 5 — restrained accessibility and small-screen polish.
+   Appended overrides intentionally preserve all Batch 1–4 visual work. */
+:root {
+  --accessible-blue: #355f91;
+}
+.kicker, .micro-label, .eyebrow, .journey-scene-kicker,
+.theme-card-group, .sample-counter { color: var(--accessible-blue); }
+.topline-aside, .eyebrow-index { color: #5f7277; }
+:where(button, a, summary, [tabindex="0"]):focus-visible {
+  outline: 3px solid #355f91;
+  outline-offset: 3px;
+}
+:where(.reader-modal-v4, .photo-modal) :where(button, a):focus-visible {
+  outline-color: #2a5f9d;
+}
+.primary-nav a:focus-visible { border-radius: 2px; }
+.language-switch button { min-height: 38px; }
+.gallery-thumb, .reader-thumb { touch-action: manipulation; }
+/* Ensure the header does not crowd the language control on narrow phones. */
+@media (max-width: 520px) {
+  .language-switch button { min-width: 40px; min-height: 42px; font-size: 12px; }
+  .menu-toggle { min-width: 42px; min-height: 42px; }
+  .header-inner { gap: 8px; }
+}
+@media (max-width: 400px) {
+  .header-order { display: none; } /* Order remains prominent in the hero. */
+  .wordmark { min-width: 78px; }
+  .modal-shade { backdrop-filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cover-stage { will-change: auto; }
+}

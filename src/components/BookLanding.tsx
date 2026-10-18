@@ -13,6 +13,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { book, gallery, previewPages } from '@/lib/book';
 
+type TopicFilter = 'all' | 'foundations' | 'practice' | 'publishing';
+const TOPIC_GROUPS = [
+  'foundations', 'foundations', 'foundations', 'foundations',
+  'practice', 'practice', 'publishing', 'publishing',
+] as const;
+
 type PhotoProps = {
   src: string;
   alt: string;
@@ -57,11 +63,25 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [readerOpen, setReaderOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
+  const [journeyActive, setJourneyActive] = useState(0);
+  const [topicFilter, setTopicFilter] = useState<TopicFilter>('all');
   const lastTrigger = useRef<HTMLElement | null>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
+    // Stage selection remains functional even when animation is reduced.
+    const stageContext = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>('.journey-stage-card').forEach((el, index) => {
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top 62%',
+          end: 'bottom 38%',
+          onEnter: () => setJourneyActive(index),
+          onEnterBack: () => setJourneyActive(index),
+        });
+      });
+    }, root);
     const mm = gsap.matchMedia();
     mm.add('(min-width: 781px) and (prefers-reduced-motion: no-preference)', () => {
       const context = gsap.context(() => {
@@ -77,12 +97,16 @@ export default function BookLanding({ locale }: { locale: Locale }) {
         });
         gsap.fromTo('.journey-progress', { scaleY: 0 }, {
           scaleY: 1, transformOrigin: 'top', ease: 'none',
-          scrollTrigger: { trigger: '.journey-section', start: 'top 72%', end: 'bottom 65%', scrub: true },
+          scrollTrigger: { trigger: '.journey-right', start: 'top 66%', end: 'bottom 56%', scrub: true },
+        });
+        gsap.to('.hero-cover-stage', {
+          y: 18, ease: 'none',
+          scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: 0.7 },
         });
       }, root);
       return () => context.revert();
     });
-    return () => mm.revert();
+    return () => { mm.revert(); stageContext.revert(); };
   }, []);
 
   useEffect(() => {
@@ -134,6 +158,17 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   const galleryMove = (direction: number) => setPhotoIndex((i) => (i + direction + gallery.length) % gallery.length);
   const closeModal = () => { setReaderOpen(false); setLightboxOpen(false); };
   const currentImage = gallery[photoIndex];
+  const activeScene = t.journey.scenes[journeyActive];
+  const visibleTopics = t.contents.topics
+    .map((title, index) => ({ title, detail: t.contents.topicDetails[index], index, group: TOPIC_GROUPS[index] }))
+    .filter((item) => topicFilter === 'all' || item.group === topicFilter);
+  const jumpToStage = (index: number) => {
+    setJourneyActive(index);
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById(`research-stage-${index}`)?.scrollIntoView({
+      behavior: reducedMotion ? 'instant' : 'smooth', block: 'center',
+    });
+  };
 
   // Keep a returning visitor's language preference, including visits to the root URL.
   useEffect(() => {
@@ -226,7 +261,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
             <div className="section-heading reveal"><h2>{t.gallery.title} <em>{t.gallery.accent}</em></h2><p>{t.gallery.intro}</p></div>
             <div className="gallery-grid">
               <div className="gallery-main reveal">
-                <div className="gallery-main-image"><Photo src={currentImage.src} alt={t.gallery.alts[photoIndex]} unavailableText={t.general.unavailable} sizes="(max-width: 780px) 95vw, 55vw" /></div>
+                <div className="gallery-main-image image-swap" key={currentImage.src}><Photo src={currentImage.src} alt={t.gallery.alts[photoIndex]} unavailableText={t.general.unavailable} sizes="(max-width: 780px) 95vw, 55vw" /></div>
                 <div className="gallery-stage-top"><span>{t.gallery.stage}</span><span>0{photoIndex + 1} <span className="muted-index">/ 0{gallery.length}</span></span></div>
                 <div className="gallery-stage-bottom">
                   <span>{t.gallery.labels[photoIndex]}</span>
@@ -251,28 +286,113 @@ export default function BookLanding({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        <section id="journey" className="section journey-section">
+        <section id="journey" className="section journey-section" aria-labelledby="journey-heading">
           <div className="container journey-grid">
-            <div className="journey-left reveal"><span className="kicker">{t.journey.eyebrow}</span><h2>{t.journey.title}<br /><em>{t.journey.accent}</em></h2><p>{t.journey.intro}</p>
-              <div className="journey-diagram" aria-label={t.journey.intro}>
-                <div className="diagram-small">{t.journey.diagramTop}</div>
-                <div className="diagram-symbols"><span>01<small>{t.journey.stagesShort[0]}</small></span><span className="diagram-connector" /><span>02<small>{t.journey.stagesShort[1]}</small></span><span className="diagram-connector" /><span>03<small>{t.journey.stagesShort[2]}</small></span></div>
-                <div className="diagram-note">{t.journey.diagramBottom}</div>
+            <div className="journey-left">
+              <div className="journey-introduction reveal">
+                <span className="kicker">{t.journey.eyebrow}</span>
+                <h2 id="journey-heading">{t.journey.title}<br /><em>{t.journey.accent}</em></h2>
+                <p>{t.journey.intro}</p>
+              </div>
+              <div className="journey-visual" data-stage={journeyActive} role="region" aria-label={activeScene.accessibleLabel}>
+                <div className="journey-visual-top">
+                  <span>{t.journey.visualLabel}</span>
+                  <span>0{journeyActive + 1} / 03</span>
+                </div>
+                <div key={`${locale}-${journeyActive}`} className="journey-visual-scene">
+                  <span className="journey-large-digit" aria-hidden="true">0{journeyActive + 1}</span>
+                  <div className="journey-visual-content">
+                    <span className="journey-scene-kicker">{activeScene.kicker}</span>
+                    <h3>{activeScene.headline}</h3>
+                    <p>{activeScene.description}</p>
+                  </div>
+                  <div className="journey-visual-milestones" aria-label={t.journey.milestoneLabel}>
+                    {activeScene.milestones.map((word, index) => (
+                      <span key={word}><b>0{index + 1}</b>{word}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="journey-stage-nav" role="group" aria-label={t.journey.stageNavigation}>
+                  {t.journey.stagesShort.map((label, index) => (
+                    <button
+                      type="button" key={label}
+                      className={journeyActive === index ? 'is-active' : ''}
+                      aria-pressed={journeyActive === index}
+                      aria-label={`${t.journey.jumpTo} ${label}`}
+                      onClick={() => jumpToStage(index)}
+                    ><span>0{index + 1}</span><span>{label}</span></button>
+                  ))}
+                </div>
               </div>
             </div>
-            <div className="journey-right"><div className="journey-track" aria-hidden="true"><span className="journey-progress" /></div>
-              {t.journey.steps.map((item, index) => <article className="journey-item reveal" key={index}><span className="journey-id">0{index + 1} / {item.label}</span><h3>{item.title}</h3><p>{item.detail}</p></article>)}
+            <div className="journey-right">
+              <div className="journey-track" aria-hidden="true"><span className="journey-progress" /></div>
+              {t.journey.steps.map((item, index) => (
+                <article
+                  className={`journey-stage-card${journeyActive === index ? ' is-current' : ''}`}
+                  id={`research-stage-${index}`}
+                  key={index}
+                  aria-label={`${index + 1}. ${item.title}`}
+                >
+                  <span className="journey-card-kicker">0{index + 1} / {item.label}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.detail}</p>
+                  <div className="journey-card-footer"><span>{t.journey.stagesShort[index]}</span><span className="journey-card-rule" aria-hidden="true" /></div>
+                </article>
+              ))}
             </div>
           </div>
         </section>
 
-        <section id="inside" className="section contents-section"><div className="container">
-          <div className="section-topline reveal"><span className="kicker">{t.contents.eyebrow}</span><span className="topline-aside">{t.contents.aside}</span></div>
-          <div className="section-heading reveal"><h2>{t.contents.title} <em>{t.contents.accent}</em></h2><p>{t.contents.intro}</p></div>
-          <div className="theme-grid">{t.contents.topics.map((item, index) => (
-            <article className={`theme-card reveal${index === 0 || index === 5 ? ' theme-featured' : ''}`} key={item}><span className="theme-card-index">{String(index + 1).padStart(2, '0')}</span><h3>{item}</h3><span className="theme-card-line" aria-hidden="true" /></article>
-          ))}</div>
-        </div></section>
+        <section id="inside" className="section contents-section" aria-labelledby="contents-heading">
+          <div className="container">
+            <div className="section-topline reveal"><span className="kicker">{t.contents.eyebrow}</span><span className="topline-aside">{t.contents.aside}</span></div>
+            <div className="section-heading reveal"><h2 id="contents-heading">{t.contents.title} <em>{t.contents.accent}</em></h2><p>{t.contents.intro}</p></div>
+            <div className="contents-explorer-header reveal">
+              <div className="contents-volume" aria-label={`${book.pageCount} ${t.contents.volumeLabel}`}>
+                <strong>504</strong><span>{t.contents.volumeLabel}</span>
+              </div>
+              <div className="contents-explorer-controls">
+                <span className="micro-label">{t.contents.filterTitle}</span>
+                <div className="contents-filters" role="group" aria-label={t.contents.filterTitle}>
+                  {t.contents.filters.map((option) => (
+                    <button type="button" key={option.key}
+                      className={topicFilter === option.key ? 'is-active' : ''}
+                      aria-pressed={topicFilter === option.key}
+                      onClick={() => setTopicFilter(option.key)}>{option.label}</button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <p className="contents-result-count" aria-live="polite">
+              {String(visibleTopics.length).padStart(2, '0')} / 08 — {t.contents.countLabel}
+            </p>
+            <div className={`theme-grid${topicFilter !== 'all' ? ' is-filtered' : ''}`} key={`${locale}-${topicFilter}`}>
+              {visibleTopics.map((item) => (
+                <article
+                  className={`theme-card theme-card--${item.group}${[0, 5, 6, 7].includes(item.index) ? ' theme-featured' : ''}`}
+                  key={item.index}
+                >
+                  <div className="theme-card-top"><span className="theme-card-index">{String(item.index + 1).padStart(2, '0')}</span><span className="theme-card-category">{t.contents.groupLabels[item.group]}</span></div>
+                  <div className="theme-card-body"><h3>{item.title}</h3><p>{item.detail}</p></div>
+                  <div className="theme-card-bottom" aria-hidden="true"><span className="theme-card-line" /><span>IOJH / 504</span></div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <aside className="editorial-interlude" aria-label={t.interlude.sectionLabel}>
+          <div className="container editorial-interlude-inner">
+            <span className="interlude-kicker reveal">{t.interlude.kicker}</span>
+            <div className="interlude-body reveal">
+              <span className="interlude-ghost" aria-hidden="true">504</span>
+              <h2>{t.interlude.title}<br /><em>{t.interlude.accent}</em></h2>
+              <p>{t.interlude.description}</p>
+            </div>
+            <div className="interlude-foot"><span>IOJH / RESEARCH</span><span>{t.interlude.footnote}</span></div>
+          </div>
+        </aside>
 
         <section id="preview" className="section sample-section">
           <div className="container sample-grid">

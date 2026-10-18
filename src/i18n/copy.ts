@@ -1,0 +1,193 @@
+/** All customer-facing copy. The physical book itself remains Bengali in both versions. */
+export type Locale = 'bn' | 'en';
+
+const bn = {
+  metadata: {
+    title: 'রিসার্চ মেথড, ম্যানুস্ক্রিপ্ট প্রিপারেশন এবং পাবলিকেশন | IOJH',
+    description: '৫০৪ পৃষ্ঠার বাংলাভাষার গবেষণা সহায়ক গ্রন্থ। বইটি দেখুন, পাঁচ পৃষ্ঠা বিনামূল্যে পড়ুন এবং IOJH-এর মাধ্যমে মুদ্রিত বইটি অর্ডার করুন।',
+  },
+  general: {
+    skip: 'মূল কনটেন্টে যান', unavailable: 'ছবিটি সাময়িকভাবে অনুপলব্ধ',
+    photoAlt: 'বইয়ের ছবি', localeLabel: 'ওয়েবসাইটের ভাষা নির্বাচন',
+    previousPhoto: 'আগের ছবি', nextPhoto: 'পরের ছবি',
+    previousPage: 'আগের পৃষ্ঠা', nextPage: 'পরের পৃষ্ঠা',
+    closePhoto: 'ছবি বন্ধ করুন', closePreview: 'নমুনা বন্ধ করুন',
+  },
+  nav: {
+    subtitle: 'BOOK COLLECTION',
+    home: 'IOJH বই সংগ্রহের মূল অংশ', main: 'প্রধান নেভিগেশন',
+    about: 'বই পরিচিতি', journey: 'গবেষণার পথ', inside: 'বইয়ের ভেতরে', preview: 'নমুনা পড়ুন',
+    order: 'অর্ডার করুন', openMenu: 'মেনু খুলুন', closeMenu: 'মেনু বন্ধ করুন',
+  },
+  hero: {
+    eyebrow: 'IOJH BOOK COLLECTION', pretitle: 'বাংলায় গবেষণা ও একাডেমিক প্রকাশনার সহায়ক গ্রন্থ',
+    title: 'গবেষণার ধারণা থেকে', accent: 'প্রকাশনা পর্যন্ত।',
+    description: 'গবেষণার প্রথম প্রশ্ন থেকে পাণ্ডুলিপি প্রস্তুতি ও জার্নালে প্রকাশনার বিভিন্ন ধাপ—একটি বাংলাভাষার বইয়ে।',
+    order: 'বইটি অর্ডার করুন', sample: '৫ পৃষ্ঠা পড়ে দেখুন',
+    pageValue: '৫০৪', pageLabel: 'পৃষ্ঠা', languageValue: 'বাংলা', languageLabel: 'বইয়ের ভাষা',
+    formatValue: 'মুদ্রিত', formatLabel: 'সংস্করণ', edition: 'মুদ্রিত সংস্করণ',
+    ribbon: 'গবেষণা · লেখালেখি · প্রকাশনা', stamp: 'PAGES',
+  },
+  taxonomy: ['গবেষণা পদ্ধতি', 'পাণ্ডুলিপি প্রস্তুতি', 'একাডেমিক প্রকাশনা'],
+  gallery: {
+    eyebrow: '01 / THE PHYSICAL BOOK', aside: 'THE ORIGINAL PRINTED EDITION',
+    title: 'বইটিকে', accent: 'কাছ থেকে দেখুন।',
+    intro: 'সামনের ও পেছনের কভার, বইয়ের মলাট এবং ভেতরের পৃষ্ঠা—মূল মুদ্রিত বইটি বিভিন্ন দিক থেকে দেখুন।',
+    stage: 'IOJH / বইয়ের ছবি', explore: 'বইয়ের বিস্তারিত দেখুন',
+    headline: 'একটি বাস্তব বই,', headlineAccent: 'যত্নে তৈরি প্রতিটি পাতা।',
+    description: 'মলাটের নকশা, বাইন্ডিং ও ছাপানো পাতার গঠন দেখুন। এখানে প্রদর্শিত ছবিগুলো বইটির বাস্তব মুদ্রিত সংস্করণের।',
+    zoom: 'বড় করে দেখুন', select: 'ছবি নির্বাচন করুন', view: 'দেখুন',
+    labels: ['সামনের কভার', 'পেছনের কভার', 'বইয়ের মলাট', 'ভেতরের পৃষ্ঠা'],
+    alts: ['বইটির আসল সামনের কভার', 'বইটির আসল পেছনের কভার', 'বইটির মলাটের পাশ', 'বইটির ভেতরের মুদ্রিত পৃষ্ঠা'],
+  },
+  journey: {
+    eyebrow: '02 / THE RESEARCH JOURNEY', title: 'ভাবনা থেকে', accent: 'প্রকাশনার পথে।',
+    intro: 'গবেষণার পরিকল্পনা, পাণ্ডুলিপি প্রস্তুতি ও একাডেমিক প্রকাশনা সম্পর্কে একটি ধারাবাহিক ধারণা।',
+    diagramTop: 'A PRACTICAL RESEARCH JOURNEY', diagramBottom: 'FROM QUESTION TO PUBLICATION',
+    stagesShort: ['ভাবনা', 'লেখা', 'প্রকাশ'],
+    steps: [
+      { label: 'গবেষণা', title: 'গবেষণার ভিত্তি', detail: 'গবেষণার ধারণা, উদ্দেশ্য, গবেষণা প্রশ্ন, নকশা, পদ্ধতি ও তথ্য বিশ্লেষণের মৌলিক বিষয়।' },
+      { label: 'পাণ্ডুলিপি', title: 'পাণ্ডুলিপি প্রস্তুতি', detail: 'গবেষণা প্রতিবেদন, একাডেমিক লেখালেখি এবং একটি সুসংগঠিত পাণ্ডুলিপি তৈরির প্রক্রিয়া।' },
+      { label: 'প্রকাশনা', title: 'প্রকাশনার পথ', detail: 'জার্নাল নির্বাচন, পিয়ার রিভিউ, প্রকাশনা নীতিমালা এবং গবেষণাকর্ম প্রকাশের গুরুত্বপূর্ণ ধাপ।' },
+    ],
+  },
+  contents: {
+    eyebrow: '03 / INSIDE 504 PAGES', aside: 'SELECTED RESEARCH THEMES',
+    title: 'বইয়ের ভেতরে', accent: 'যা থাকছে।',
+    intro: 'বইটির আলোচ্য বিষয় থেকে বাছাই করা কয়েকটি গুরুত্বপূর্ণ ক্ষেত্র। এটি সম্পূর্ণ সূচিপত্র নয়।',
+    topics: [
+      'গবেষণার মৌলিক ধারণা', 'গবেষণার বৈশিষ্ট্য', 'গবেষণা বিষয় নির্বাচন', 'গবেষণা প্রশ্ন ও উদ্দেশ্য',
+      'গবেষণার নকশা ও নমুনা নির্বাচন', 'গবেষণার নৈতিকতা',
+      'পাণ্ডুলিপি প্রস্তুতি ও একাডেমিক লেখা', 'জার্নাল নির্বাচন ও প্রকাশনা প্রক্রিয়া',
+    ],
+  },
+  sample: {
+    eyebrow: '04 / READ BEFORE YOU BUY', title: 'কেনার আগে', accent: 'নিজেই পড়ে দেখুন।',
+    intro: 'মূল বইয়ের পাঁচটি নির্বাচিত নমুনা পৃষ্ঠা পড়ুন—কোনো লগইন বা পেমেন্ট প্রয়োজন নেই।',
+    action: 'পাঁচ পৃষ্ঠা পড়ুন', assurance: 'আসল মুদ্রিত বইয়ের পৃষ্ঠা · বিনামূল্যে',
+    photoAlt: 'মূল বইয়ের একটি নমুনা পৃষ্ঠা', open: 'নমুনা খুলুন',
+    previewTag: 'বিনামূল্যের নমুনা', readerTitle: 'বইয়ের নমুনা পৃষ্ঠা', readerKicker: 'IOJH / FIVE FREE PAGES',
+    page: 'পৃষ্ঠা', previewAlt: 'বইয়ের নমুনা পৃষ্ঠা',
+  },
+  details: {
+    eyebrow: '05 / BOOK DETAILS', aside: 'AUTHOR · FORMAT · ISBN',
+    title: 'এক নজরে', accent: 'গ্রন্থ পরিচিতি।',
+    name: 'বইয়ের নাম', author: 'লেখক', pages: 'পৃষ্ঠা', language: 'ভাষা / সংস্করণ',
+    languageValue: 'বাংলা / মুদ্রিত', imprint: 'মূল প্রকাশনা-তথ্য',
+    orderKicker: 'GET YOUR PRINTED COPY', orderTitle: 'আপনার গবেষণার', orderAccent: 'যাত্রায় বইটি পাশে থাকুক।',
+    orderInfo: 'IOJH-এর অফিসিয়াল পণ্য পৃষ্ঠায় বর্তমান মূল্য, ডেলিভারি চার্জ ও অর্ডারের নিয়ম যাচাই করে নিন।',
+    orderButton: 'IOJH থেকে অর্ডার করুন', printFootnote: 'মুদ্রিত বই', listingFootnote: 'IOJH-এর অফিসিয়াল পণ্য পৃষ্ঠা',
+  },
+  faq: {
+    eyebrow: '06 / INFORMATION', title: 'আপনার', accent: 'জিজ্ঞাসা।',
+    intro: 'অর্ডারের আগে কিছু প্রয়োজনীয় তথ্য।',
+    items: [
+      { question: 'এটি কি মুদ্রিত বই?', answer: 'হ্যাঁ। এটি ৫০৪ পৃষ্ঠার একটি মুদ্রিত বাংলাভাষার বই।' },
+      { question: 'কেনার আগে কি বইয়ের নমুনা পড়তে পারব?', answer: 'হ্যাঁ। এই ওয়েবসাইটে পাঁচটি নির্বাচিত নমুনা পৃষ্ঠা বিনামূল্যে পড়তে পারবেন।' },
+      { question: 'বইটি কি ইংরেজিতে পাওয়া যায়?', answer: 'এখানে প্রদর্শিত বইটির মুদ্রিত সংস্করণ বাংলায় লেখা। ওয়েবসাইটটি বাংলার পাশাপাশি ইংরেজিতেও দেখা যায়; ভাষা পরিবর্তন করলে বইয়ের ভাষা বদলায় না।' },
+      { question: 'বইয়ের মূল্য ও ডেলিভারি তথ্য কোথায় পাব?', answer: 'বর্তমান মূল্য, ডেলিভারি চার্জ, অর্ডার ও পেমেন্টের তথ্য জানতে IOJH-এর অফিসিয়াল পণ্য পৃষ্ঠা দেখুন।' },
+    ],
+  },
+  footer: {
+    tagline: 'Research · Knowledge · Publication', view: 'IOJH-তে বইটি দেখুন',
+    collection: 'IOJH · বই সংগ্রহ',
+  },
+} as const;
+
+const en = {
+  metadata: {
+    title: 'Research Method, Manuscript Preparation and Publication | IOJH',
+    description: 'Explore a 504-page Bengali-language guide to research methods, manuscript writing and academic publishing. View the book, read five free sample pages and order through IOJH.',
+  },
+  general: {
+    skip: 'Skip to main content', unavailable: 'Image temporarily unavailable',
+    photoAlt: 'Book photograph', localeLabel: 'Choose website language',
+    previousPhoto: 'Previous photo', nextPhoto: 'Next photo',
+    previousPage: 'Previous page', nextPage: 'Next page',
+    closePhoto: 'Close image', closePreview: 'Close sample reader',
+  },
+  nav: {
+    subtitle: 'BOOK COLLECTION',
+    home: 'IOJH book collection home', main: 'Main navigation',
+    about: 'The Book', journey: 'Research Journey', inside: 'Inside the Book', preview: 'Read a Sample',
+    order: 'Order Now', openMenu: 'Open menu', closeMenu: 'Close menu',
+  },
+  hero: {
+    eyebrow: 'IOJH BOOK COLLECTION', pretitle: 'A Bengali-language guide to research and scholarly publishing',
+    title: 'From Research Ideas', accent: 'to Publication.',
+    description: 'Follow the journey from your first research question to manuscript preparation and journal publication—with one comprehensive guide written in Bengali.',
+    order: 'Order the Book', sample: 'Read 5 Free Pages',
+    pageValue: '504', pageLabel: 'Pages', languageValue: 'Bengali', languageLabel: 'Book language',
+    formatValue: 'Printed', formatLabel: 'Edition', edition: 'THE PRINTED EDITION',
+    ribbon: 'RESEARCH · WRITING · PUBLICATION', stamp: 'PAGES',
+  },
+  taxonomy: ['RESEARCH METHODS', 'MANUSCRIPT PREPARATION', 'ACADEMIC PUBLICATION'],
+  gallery: {
+    eyebrow: '01 / THE PHYSICAL BOOK', aside: 'THE ORIGINAL PRINTED EDITION',
+    title: 'Explore the Book', accent: 'Up Close.',
+    intro: 'Examine the front and back covers, the spine and the interior pages of the actual printed edition.',
+    stage: 'IOJH / BOOK VIEW', explore: 'EXPLORE THE DETAILS',
+    headline: 'A Real, Printed Book.', headlineAccent: 'Considered in Every Detail.',
+    description: 'Take a closer look at the cover design, binding and printed pages. The photographs represent the physical book you will receive.',
+    zoom: 'Enlarge Image', select: 'SELECT A VIEW', view: 'View',
+    labels: ['Front Cover', 'Back Cover', 'Book Spine', 'Inside Pages'],
+    alts: ['Original front cover of the book', 'Original back cover of the book', 'Spine of the printed book', 'Printed interior pages of the book'],
+  },
+  journey: {
+    eyebrow: '02 / THE RESEARCH JOURNEY', title: 'From an Idea', accent: 'to Publication.',
+    intro: 'A structured introduction to the stages of planning research, preparing a manuscript and navigating academic publication.',
+    diagramTop: 'A PRACTICAL RESEARCH JOURNEY', diagramBottom: 'FROM QUESTION TO PUBLICATION',
+    stagesShort: ['IDEA', 'WRITE', 'PUBLISH'],
+    steps: [
+      { label: 'RESEARCH', title: 'Research Foundations', detail: 'Key concepts in research questions, objectives, study design, methodology and data analysis.' },
+      { label: 'MANUSCRIPT', title: 'Manuscript Preparation', detail: 'An introduction to academic writing, research reports and developing a well-structured manuscript.' },
+      { label: 'PUBLICATION', title: 'The Path to Publication', detail: 'Important stages of journal selection, peer review, publication ethics and research dissemination.' },
+    ],
+  },
+  contents: {
+    eyebrow: '03 / INSIDE 504 PAGES', aside: 'SELECTED RESEARCH THEMES',
+    title: 'What You Will', accent: 'Find Inside.',
+    intro: 'An introduction to selected subjects covered in the book. This is not the complete table of contents.',
+    topics: [
+      'Foundations of Research', 'Characteristics of Good Research', 'Choosing a Research Topic',
+      'Research Questions and Objectives', 'Research Design and Sampling', 'Research Ethics',
+      'Manuscript Preparation and Academic Writing', 'Journal Selection and the Publication Process',
+    ],
+  },
+  sample: {
+    eyebrow: '04 / READ BEFORE YOU BUY', title: 'Explore a Few Pages', accent: 'Before You Buy.',
+    intro: 'Read five selected pages from the actual printed book, free of charge. No account or payment required.',
+    action: 'Read Five Pages', assurance: 'Original Bengali pages · Free to read',
+    photoAlt: 'A sample page from the original Bengali-language book', open: 'Open Sample',
+    previewTag: 'FREE PREVIEW', readerTitle: 'Read a Sample of the Book', readerKicker: 'IOJH / FIVE FREE PAGES',
+    page: 'Page', previewAlt: 'Bengali-language sample page',
+  },
+  details: {
+    eyebrow: '05 / BOOK DETAILS', aside: 'AUTHOR · FORMAT · ISBN',
+    title: 'Book Details', accent: 'at a Glance.',
+    name: 'Book Title', author: 'Author', pages: 'Pages', language: 'Language / Format',
+    languageValue: 'Bengali / Printed', imprint: 'Original Publication Imprint',
+    orderKicker: 'GET YOUR PRINTED COPY', orderTitle: 'A Practical Companion', orderAccent: 'for Your Research Journey.',
+    orderInfo: 'Check the current price, delivery charges and ordering information on the official IOJH product page before purchasing.',
+    orderButton: 'Order Through IOJH', printFootnote: 'Printed book', listingFootnote: 'Official IOJH listing',
+  },
+  faq: {
+    eyebrow: '06 / INFORMATION', title: 'Frequently Asked', accent: 'Questions.',
+    intro: 'Helpful information before placing your order.',
+    items: [
+      { question: 'Is this a physical book?', answer: 'Yes. This is a 504-page printed book written in Bengali.' },
+      { question: 'Can I read sample pages before buying?', answer: 'Yes. You can read five selected pages free of charge using the sample reader on this website.' },
+      { question: 'Is the printed book available in English?', answer: 'The printed edition presented here is in Bengali. The website is available in both Bengali and English; switching the website language does not translate the book itself.' },
+      { question: 'Where can I confirm the price and delivery options?', answer: 'Please consult the official IOJH product page for the current price, shipping charges, payment methods and order details.' },
+    ],
+  },
+  footer: {
+    tagline: 'Research · Knowledge · Publication', view: 'VIEW BOOK ON IOJH',
+    collection: 'IOJH · Book Collection',
+  },
+} as const;
+
+export const dictionaries = { bn, en };
+export type Dictionary = typeof bn | typeof en;
+export function isLocale(value: string): value is Locale { return value === 'bn' || value === 'en'; }
+export function getCopy(locale: Locale) { return dictionaries[locale]; }

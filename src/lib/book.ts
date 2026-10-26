@@ -18,7 +18,10 @@ export const gallery = [
   { id: 'inside', src: `${base}/gallery/interior.jpg` },
 ];
 
-// Public sample ONLY: exactly five approved image files, never the full print PDF.
-export const previewPages = Array.from({ length: 5 }, (_, i) => ({
+// Only the approved original-language sample images are public.
+// Change 5 to 6 after you add preview/sample-06.jpg to the SAME image directory.
+// Never upload your full 504-page PDF to the public folder.
+export const SAMPLE_PAGE_COUNT: 5 | 6 = 5;
+export const previewPages = Array.from({ length: SAMPLE_PAGE_COUNT }, (_, i) => ({
   src: `${base}/preview/sample-${String(i + 1).padStart(2, '0')}.jpg`,
 }));

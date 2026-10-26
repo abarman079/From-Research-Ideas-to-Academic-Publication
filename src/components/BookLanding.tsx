@@ -15,6 +15,7 @@ import { book, gallery, previewPages } from '@/lib/book';
 import HeroFlipReader from '@/components/HeroFlipReader';
 import ReaderReviews from '@/components/ReaderReviews';
 import AuthorAndPurchase from '@/components/AuthorAndPurchase';
+import { reviews } from '@/lib/reviews';
 
 type TopicFilter = 'all' | 'foundations' | 'practice' | 'publishing';
 const TOPIC_GROUPS = [
@@ -174,6 +175,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   const sampleButtonText = locale === 'bn'
     ? `${String(previewPages.length).replace(/[0-9]/g, (digit) => '০১২৩৪৫৬৭৮৯'[Number(digit)])} পৃষ্ঠা পড়ে দেখুন`
     : `Read ${previewPages.length} Sample Pages`;
+  const hasApprovedReviews = reviews.some((item) => item.approved);
   const currentImage = gallery[photoIndex];
   const visibleTopics = t.contents.topics
     .map((title, index) => ({ title, detail: t.contents.topicDetails[index], index, group: TOPIC_GROUPS[index] }))
@@ -209,9 +211,9 @@ export default function BookLanding({ locale }: { locale: Locale }) {
           </a>
           <nav id="primary-navigation" className={`primary-nav${navOpen ? ' is-open' : ''}`} aria-label={t.nav.main}>
             <a href="#about" onClick={() => setNavOpen(false)}>{t.nav.about}</a>
-            <a href="#reviews" onClick={() => setNavOpen(false)}>{t.nav.reviews}</a>
             <a href="#inside" onClick={() => setNavOpen(false)}>{t.nav.inside}</a>
-            <a href="#details" onClick={() => setNavOpen(false)}>{locale === 'bn' ? 'লেখক ও অর্ডার' : 'Author & Order'}</a>
+            {hasApprovedReviews && <a href="#reviews" onClick={() => setNavOpen(false)}>{t.nav.reviews}</a>}
+            <a href="#details" onClick={() => setNavOpen(false)}>{locale === 'bn' ? 'লেখক পরিচিতি' : 'About the Author'}</a>
             <button className="nav-reader-button" type="button" onClick={(event) => openReader(event.currentTarget)}>{t.nav.preview}</button>
           </nav>
           <div className="header-actions">
@@ -220,7 +222,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
               <span className="language-divider" aria-hidden="true" />
               <button type="button" aria-pressed={locale === 'en'} lang="en" className={locale === 'en' ? 'active' : ''} onClick={() => switchLocale('en')}>EN</button>
             </div>
-            <a className="header-order" href={book.productUrl} target="_blank" rel="noopener noreferrer">
+            <a className="header-order" href="#purchase" onClick={() => setNavOpen(false)}>
               {t.nav.order} <ArrowUpRight size={15} aria-hidden="true" />
             </a>
             <button ref={mobileMenuButton} className="menu-toggle" type="button" aria-label={navOpen ? t.nav.closeMenu : t.nav.openMenu} aria-expanded={navOpen} aria-controls="primary-navigation" onClick={() => setNavOpen(!navOpen)}>
@@ -240,7 +242,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
               <p className="hero-book-name hero-enter">{locale === 'bn' ? book.title : book.englishTitle}</p>
               <p className="hero-description hero-enter">{t.hero.description}</p>
               <div className="hero-buttons hero-enter">
-                <a className="btn btn-dark" href={book.productUrl} target="_blank" rel="noopener noreferrer">{t.hero.order} <ArrowUpRight size={18} aria-hidden="true" /></a>
+                <a className="btn btn-dark" href="#purchase">{t.hero.order} <ArrowUpRight size={18} aria-hidden="true" /></a>
                 <button className="btn btn-light" type="button" onClick={(e) => openReader(e.currentTarget)}><BookOpen size={18} aria-hidden="true" /> {sampleButtonText}</button>
               </div>
               <div className="hero-facts hero-enter" aria-label={t.hero.edition}>
@@ -267,12 +269,12 @@ export default function BookLanding({ locale }: { locale: Locale }) {
                     className="hero-gallery-main image-swap"
                     onClick={(event) => {
                       if (ignoreSwipedPhotoClick.current) { ignoreSwipedPhotoClick.current = false; return; }
-                      openReader(event.currentTarget);
+                      openGallery(event.currentTarget);
                     }}
                     onTouchStart={onGalleryTouchStart}
                     onTouchEnd={onGalleryTouchEnd}
-                    aria-label={t.gallery.openReader}
-                    title={t.gallery.openReader}
+                    aria-label={t.gallery.zoom}
+                    title={t.gallery.zoom}
                   >
                     <Photo src={currentImage.src} alt={t.gallery.alts[photoIndex]} unavailableText={t.general.unavailable} priority={photoIndex === 0} sizes="(max-width: 780px) 94vw, 44vw" />
                   </button>
@@ -324,9 +326,11 @@ export default function BookLanding({ locale }: { locale: Locale }) {
             <div className="section-topline reveal"><span className="kicker">{t.contents.eyebrow}</span><span className="topline-aside">{t.contents.aside}</span></div>
             <div className="section-heading reveal"><h2 id="contents-heading">{t.contents.title} <em>{t.contents.accent}</em></h2><p>{t.contents.intro}</p></div>
             <div className="contents-explorer-header reveal">
-              <div className="contents-volume" aria-label={`${book.pageCount} ${t.contents.volumeLabel}`}>
-                <strong>504</strong><span>{t.contents.volumeLabel}</span>
-              </div>
+              <p className="contents-editorial-note">
+                {locale === 'bn'
+                  ? 'গবেষণার ভিত্তি থেকে পাণ্ডুলিপি ও প্রকাশনার প্রস্তুতি—বইয়ের নির্বাচিত বিষয়গুলো দেখুন।'
+                  : 'From research fundamentals to manuscript preparation and publication—explore selected themes from the book.'}
+              </p>
               <div className="contents-explorer-controls">
                 <span className="micro-label">{t.contents.filterTitle}</span>
                 <div className="contents-filters" role="group" aria-label={t.contents.filterTitle}>
@@ -350,7 +354,6 @@ export default function BookLanding({ locale }: { locale: Locale }) {
                 >
                   <div className="theme-card-top"><span className="theme-card-index">{String(item.index + 1).padStart(2, '0')}</span><span className="theme-card-category">{t.contents.groupLabels[item.group]}</span></div>
                   <div className="theme-card-body"><h3>{item.title}</h3><p>{item.detail}</p></div>
-                  <div className="theme-card-bottom" aria-hidden="true"><span className="theme-card-line" /><span>IOJH / 504</span></div>
                 </article>
               ))}
             </div>
@@ -358,7 +361,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
         </section>
 
 
-        <ReaderReviews locale={locale} />
+        {hasApprovedReviews && <ReaderReviews locale={locale} />}
 
         <AuthorAndPurchase locale={locale} />
 
@@ -369,7 +372,19 @@ export default function BookLanding({ locale }: { locale: Locale }) {
         </div></section>
       </main>
 
-      <footer className="site-footer"><div className="container footer-main"><div><div className="footer-mark">IOJH<span>.</span></div><p>{t.footer.tagline}</p></div><a href={book.productUrl} target="_blank" rel="noopener noreferrer">{t.footer.view} <ArrowUpRight size={16}/></a></div><div className="container footer-meta"><span>© {new Date().getFullYear()} {t.footer.collection}</span><span>ISBN {book.isbn}</span></div></footer>
+      <footer className="site-footer">
+        <div className="container footer-main">
+          <div className="footer-identity"><div className="footer-mark">IOJH<span>.</span></div><p>{t.footer.tagline}</p></div>
+          <nav className="footer-nav" aria-label={locale === 'bn' ? 'ফুটার নেভিগেশন' : 'Footer navigation'}>
+            <a href="#top">{locale === 'bn' ? 'বই পরিচিতি' : 'The Book'}</a>
+            <a href="#inside">{locale === 'bn' ? 'বইয়ের বিষয়বস্তু' : 'Inside the Book'}</a>
+            <a href="#details">{locale === 'bn' ? 'লেখক পরিচিতি' : 'About the Author'}</a>
+            <a href="#purchase">{locale === 'bn' ? 'কোথায় কিনবেন' : 'Where to Buy'}</a>
+          </nav>
+          <a className="footer-buy-link" href="#purchase">{locale === 'bn' ? 'বইটি সংগ্রহ করুন' : 'Find Your Copy'} <ArrowUpRight size={16} aria-hidden="true"/></a>
+        </div>
+        <div className="container footer-meta"><span>© {new Date().getFullYear()} {t.footer.collection}</span><span>ISBN {book.isbn}</span></div>
+      </footer>
 
       {lightboxOpen && (
         <div className="modal-shade" onMouseDown={(e) => { if (e.target === e.currentTarget) closeModal(); }}>
@@ -381,7 +396,15 @@ export default function BookLanding({ locale }: { locale: Locale }) {
         </div>
       )}
       {readerOpen && (
-        <HeroFlipReader locale={locale} pages={previewPages} productUrl={book.productUrl} onClose={closeReader} />
+        <HeroFlipReader locale={locale} pages={previewPages} productUrl={book.productUrl} onClose={closeReader}
+          onChooseStore={() => {
+            setReaderOpen(false);
+            window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+              const target = document.getElementById('purchase');
+              target?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+              target?.focus({ preventScroll: true });
+            }));
+          }} />
       )}
     </div>
   );

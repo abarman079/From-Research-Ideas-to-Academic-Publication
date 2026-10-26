@@ -20,9 +20,10 @@ type Props = {
   pages: Sample[];
   productUrl: string;
   onClose: () => void;
+  onChooseStore?: () => void;
 };
 
-export default function HeroFlipReader({ locale, pages, productUrl, onClose }: Props) {
+export default function HeroFlipReader({ locale, pages, productUrl, onClose, onChooseStore }: Props) {
   const isBangla = locale === 'bn';
   const mountHost = useRef<HTMLDivElement>(null);
   const engine = useRef<FlipEngine | null>(null);
@@ -188,7 +189,11 @@ export default function HeroFlipReader({ locale, pages, productUrl, onClose }: P
           </div>
           <div className="flip-footer-actions">
             <a className="flip-text-link" href={pages[current]?.src} target="_blank" rel="noopener noreferrer">{label.originalPage} <ArrowUpRight size={15} /></a>
-            <a className="flip-order" href={productUrl} target="_blank" rel="noopener noreferrer">{label.order} <ArrowUpRight size={15}/></a>
+            {onChooseStore ? (
+              <button type="button" className="flip-order" onClick={onChooseStore}>{isBangla ? 'কোথায় কিনবেন' : 'Choose a Store'} <ArrowUpRight size={15} aria-hidden="true"/></button>
+            ) : (
+              <a className="flip-order" href={productUrl} target="_blank" rel="noopener noreferrer">{label.order} <ArrowUpRight size={15}/></a>
+            )}
           </div>
         </footer>
       </div>

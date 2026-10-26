@@ -1215,3 +1215,91 @@ html[lang="en"] .testimonials-intro h2 { font-family: Georgia, 'Times New Roman'
   .testimonials-arrows button,
   .testimonials-pagination button span { transition: none; }
 }
+
+
+/* FINAL POLISH / intentionally quiet editorial layout, 2026-10 */
+.hero-grid {
+  min-height: 0;
+  padding-top: clamp(42px, 5vw, 76px);
+  padding-bottom: clamp(50px, 5.5vw, 88px);
+}
+.hero-gallery-main { cursor: zoom-in; }
+.hero-gallery-main:hover img { transform: scale(1.012); }
+.hero-title { text-wrap: balance; }
+.hero-description { max-width: 570px; }
+.hero-gallery-thumbnails { scrollbar-width: thin; }
+
+/* Replace oversized counter and mechanical separators with intentional typography. */
+.contents-section { padding-block: clamp(66px, 7vw, 108px); }
+.contents-explorer-header {
+  align-items: flex-end;
+  border: none;
+  padding: 4px 0 18px;
+  margin: 0 0 12px;
+}
+.contents-editorial-note {
+  max-width: 470px;
+  margin: 0;
+  color: #5d7280;
+  font-size: 15px;
+  line-height: 1.8;
+}
+.contents-result-count { margin: 4px 0 16px; letter-spacing: .03em; }
+.theme-grid { gap: clamp(10px, 1.2vw, 16px); }
+.theme-card, .theme-card.theme-featured, .theme-card.theme-card--practice.theme-featured,
+.theme-card.theme-card--publishing.theme-featured {
+  grid-column: span 3;
+  min-height: 230px;
+  background: #fffdf8;
+  box-shadow: none;
+  border: 1px solid #e4e7e2;
+  padding: clamp(22px, 2.2vw, 30px);
+  gap: 24px;
+}
+.theme-card::after { display: none; }
+.theme-card:nth-child(4n+1), .theme-card:nth-child(4n+4) { background: #edf1f1; }
+.theme-card:hover { transform: translateY(-2px); border-color: #9eb5bc; box-shadow: 0 10px 24px #16314909; }
+.theme-card-body h3, .theme-card.theme-featured h3 { font-size: clamp(19px,1.6vw,24px); line-height: 1.5; }
+.theme-card-body p { font-size: 14px; line-height: 1.75; }
+.theme-card-category { letter-spacing: 0; font-weight: 500; }
+.theme-grid.is-filtered .theme-card { grid-column: span 4; }
+
+/* FAQ should read as calm editorial entries, not repeated decorative rules. */
+.faq-section { padding-block: clamp(72px, 7vw, 112px); }
+.faq-list { display: grid; gap: 9px; }
+.faq-list details { border: 1px solid #e5e9e9; padding: 20px 22px; background: #fafbf9; }
+.faq-list summary { line-height: 1.65; }
+.faq-list details[open] { background: #f5f8f8; }
+
+/* Real navigation, instead of an almost-empty dark footer. */
+.footer-main { align-items: flex-start; padding-top: 54px; padding-bottom: 44px; }
+.footer-identity { max-width: 300px; }
+.footer-nav { display: grid; gap: 12px; font-size: 13px; color: #cbd9e0; }
+.footer-nav a:hover { color: white; text-decoration: underline; text-underline-offset: 4px; }
+.footer-buy-link { border-bottom: 1px solid #ffffff80; padding-block: 7px; font-size: 12px; font-weight: 700; }
+.footer-buy-link:hover { color: #f0ca7c; }
+
+#purchase { scroll-margin-top: 118px; }
+
+@media (max-width: 1080px) {
+  .theme-card, .theme-card.theme-featured, .theme-card.theme-card--practice.theme-featured,
+  .theme-card.theme-card--publishing.theme-featured { grid-column: span 6; }
+  .theme-grid.is-filtered .theme-card { grid-column: span 6; }
+}
+@media (max-width: 780px) {
+  .hero-grid { padding-top: 40px; padding-bottom: 58px; }
+  .contents-explorer-header { flex-direction: column; align-items: stretch; gap: 18px; }
+  .contents-explorer-controls { align-items: flex-start; }
+  .contents-filters { justify-content: flex-start; }
+  .footer-main { flex-wrap: wrap; }
+}
+@media (max-width: 540px) {
+  .theme-card, .theme-card.theme-featured, .theme-card.theme-card--practice.theme-featured,
+  .theme-card.theme-card--publishing.theme-featured, .theme-grid.is-filtered .theme-card { grid-column: span 12; min-height: 0; }
+  .footer-main { display: grid; gap: 25px; }
+  .footer-meta { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-card { transition: none; }
+  .theme-card:hover { transform: none; }
+}

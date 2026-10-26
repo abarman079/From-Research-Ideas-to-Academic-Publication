@@ -21,7 +21,7 @@ export default function AuthorAndPurchase({ locale }: { locale: Locale }) {
       <div className="container">
         <header className={styles.heading}>
           <p className={styles.eyebrow}>{c.sectionLabel}</p>
-          <h2 id="author-section-title">{c.title} <span>{c.accent}</span></h2>
+          <h2 id="author-section-title">{locale === 'bn' ? 'লেখক পরিচিতি' : 'About the Author'}</h2>
           <p className={styles.intro}>{c.introduction}</p>
         </header>
 
@@ -71,7 +71,7 @@ export default function AuthorAndPurchase({ locale }: { locale: Locale }) {
             </dl>
           </section>
 
-          <section className={styles.purchasePanel} aria-labelledby="purchase-panel-title">
+          <section id="purchase" tabIndex={-1} className={styles.purchasePanel} aria-labelledby="purchase-panel-title">
             <span className={styles.buyEyebrow}>{c.buyEyebrow}</span>
             <h3 id="purchase-panel-title">{c.buyTitle}</h3>
             <p className={styles.buyIntro}>{c.buyIntro}</p>

@@ -16,7 +16,7 @@ const bn = {
   nav: {
     subtitle: 'BOOK COLLECTION',
     home: 'IOJH বই সংগ্রহের মূল অংশ', main: 'প্রধান নেভিগেশন',
-    about: 'বই পরিচিতি', journey: 'গবেষণার পথ', inside: 'বইয়ের ভেতরে', preview: 'নমুনা পড়ুন',
+    about: 'বই পরিচিতি', journey: 'গবেষণার পথ', reviews: 'পাঠকের মতামত', inside: 'বইয়ের ভেতরে', preview: 'নমুনা পড়ুন',
     order: 'অর্ডার করুন', openMenu: 'মেনু খুলুন', closeMenu: 'মেনু বন্ধ করুন',
   },
   hero: {
@@ -68,7 +68,7 @@ const bn = {
     ],
   },
   contents: {
-    eyebrow: '03 / INSIDE 504 PAGES', aside: 'SELECTED RESEARCH THEMES',
+    eyebrow: '02 / INSIDE 504 PAGES', aside: 'SELECTED RESEARCH THEMES',
     title: 'বইয়ের ভেতরে', accent: 'যা থাকছে।',
     intro: 'গবেষণা থেকে প্রকাশনা পর্যন্ত বইয়ের আলোচ্য গুরুত্বপূর্ণ বিষয়গুলো এক নজরে দেখুন। এগুলো নির্বাচিত বিষয়; সম্পূর্ণ সূচিপত্র নয়।',
     volumeLabel: 'পৃষ্ঠা · মুদ্রিত গ্রন্থ',
@@ -118,6 +118,18 @@ const bn = {
     readerPurchaseKicker: 'মুদ্রিত বই', readerPurchaseText: 'বইটি ভালো লাগলে IOJH-এর অফিসিয়াল পৃষ্ঠা থেকে বর্তমান মূল্য ও অর্ডারের তথ্য দেখুন।',
     readerOrder: 'মুদ্রিত বইটি দেখুন',
   },
+  reviews: {
+    eyebrow: '03 / READER REVIEWS',
+    title: 'পাঠকের মতামত',
+    draftTitle: 'পাঠক-প্রতিক্রিয়ার নমুনা',
+    intro: 'বইটি সম্পর্কে পাঠকদের অভিজ্ঞতা ও মতামত।',
+    draftIntro: 'রিভিউ সেকশনের নকশা দেখার জন্য প্রস্তুত করা নমুনা লেখা। এগুলো এখনো সংশ্লিষ্ট ব্যক্তিদের অনুমোদিত মতামত নয়।',
+    draftBadge: 'নমুনা রিভিউ · অনুমোদন বাকি',
+    disclaimer: 'প্রদর্শিত নাম, রেটিং ও লেখা অনুমোদন-অপেক্ষমাণ নমুনা। আসল রিভিউ, রেটিং ও ছবির জন্য প্রত্যেকের অনুমতি ও নিশ্চিতকরণ প্রয়োজন।',
+    carouselLabel: 'পাঠক-প্রতিক্রিয়ার স্লাইডার',
+    selectReview: 'রিভিউ নির্বাচন', reviewNumber: 'রিভিউ',
+    previous: 'আগের রিভিউ', next: 'পরের রিভিউ', starsLabel: 'এর মধ্যে ৫ তারকা',
+  },
   details: {
     eyebrow: '04 / BOOK DETAILS', aside: 'AUTHOR · FORMAT · ISBN',
     title: 'এক নজরে', accent: 'গ্রন্থ পরিচিতি।',
@@ -161,7 +173,7 @@ const en = {
   nav: {
     subtitle: 'BOOK COLLECTION',
     home: 'IOJH book collection home', main: 'Main navigation',
-    about: 'The Book', journey: 'Research Journey', inside: 'Inside the Book', preview: 'Read a Sample',
+    about: 'The Book', journey: 'Research Journey', reviews: 'Reviews', inside: 'Inside the Book', preview: 'Read a Sample',
     order: 'Order Now', openMenu: 'Open menu', closeMenu: 'Close menu',
   },
   hero: {
@@ -213,7 +225,7 @@ const en = {
     ],
   },
   contents: {
-    eyebrow: '03 / INSIDE 504 PAGES', aside: 'SELECTED RESEARCH THEMES',
+    eyebrow: '02 / INSIDE 504 PAGES', aside: 'SELECTED RESEARCH THEMES',
     title: 'Explore What Is', accent: 'Inside the Book.',
     intro: 'Browse selected areas of the book, from research foundations through academic writing and publication. This is a thematic overview, not the complete table of contents.',
     volumeLabel: 'PAGES · PRINTED EDITION',
@@ -262,6 +274,18 @@ const en = {
     originalLanguageNotice: 'These are authentic pages from the Bengali edition; the printed text is not translated.',
     readerPurchaseKicker: 'PRINTED EDITION', readerPurchaseText: 'Interested in a physical copy? View the current price and ordering terms on IOJH’s official product page.',
     readerOrder: 'View the Printed Book',
+  },
+  reviews: {
+    eyebrow: '03 / READER REVIEWS',
+    title: 'What Readers Are Saying',
+    draftTitle: 'Reader Review Previews',
+    intro: 'Insights and experiences shared by readers of the book.',
+    
+    
+   
+    carouselLabel: 'Reader review carousel',
+    selectReview: 'Choose a review', reviewNumber: 'Review',
+    previous: 'Previous review', next: 'Next review', starsLabel: 'out of 5 stars',
   },
   details: {
     eyebrow: '04 / BOOK DETAILS', aside: 'AUTHOR · FORMAT · ISBN',

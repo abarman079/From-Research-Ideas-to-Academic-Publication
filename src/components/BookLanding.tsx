@@ -13,6 +13,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { book, gallery, previewPages } from '@/lib/book';
 import HeroFlipReader from '@/components/HeroFlipReader';
+import ReaderReviews from '@/components/ReaderReviews';
 
 type TopicFilter = 'all' | 'foundations' | 'practice' | 'publishing';
 const TOPIC_GROUPS = [
@@ -64,7 +65,6 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [readerOpen, setReaderOpen] = useState(false);
-  const [journeyActive, setJourneyActive] = useState(0);
   const [topicFilter, setTopicFilter] = useState<TopicFilter>('all');
   const lastTrigger = useRef<HTMLElement | null>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
@@ -73,18 +73,6 @@ export default function BookLanding({ locale }: { locale: Locale }) {
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
-    // Stage selection remains functional even when animation is reduced.
-    const stageContext = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>('.journey-stage-card').forEach((el, index) => {
-        ScrollTrigger.create({
-          trigger: el,
-          start: 'top 62%',
-          end: 'bottom 38%',
-          onEnter: () => setJourneyActive(index),
-          onEnterBack: () => setJourneyActive(index),
-        });
-      });
-    }, root);
     const mm = gsap.matchMedia();
     mm.add('(min-width: 781px) and (prefers-reduced-motion: no-preference)', () => {
       const context = gsap.context(() => {
@@ -98,10 +86,6 @@ export default function BookLanding({ locale }: { locale: Locale }) {
             scrollTrigger: { trigger: el, start: 'top 90%', once: true },
           });
         });
-        gsap.fromTo('.journey-progress', { scaleY: 0 }, {
-          scaleY: 1, transformOrigin: 'top', ease: 'none',
-          scrollTrigger: { trigger: '.journey-right', start: 'top 66%', end: 'bottom 56%', scrub: true },
-        });
         gsap.to('.hero-gallery-media', {
           y: 10, ease: 'none',
           scrollTrigger: { trigger: '.hero-section', start: 'top top', end: 'bottom top', scrub: 0.7 },
@@ -109,7 +93,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
       }, root);
       return () => context.revert();
     });
-    return () => { mm.revert(); stageContext.revert(); };
+    return () => { mm.revert(); };
   }, []);
 
   // Mobile navigation can be dismissed with Escape without losing keyboard focus.
@@ -190,18 +174,9 @@ export default function BookLanding({ locale }: { locale: Locale }) {
     ? `${String(previewPages.length).replace(/[0-9]/g, (digit) => '০১২৩৪৫৬৭৮৯'[Number(digit)])} পৃষ্ঠা পড়ে দেখুন`
     : `Read ${previewPages.length} Sample Pages`;
   const currentImage = gallery[photoIndex];
-  const activeScene = t.journey.scenes[journeyActive];
   const visibleTopics = t.contents.topics
     .map((title, index) => ({ title, detail: t.contents.topicDetails[index], index, group: TOPIC_GROUPS[index] }))
     .filter((item) => topicFilter === 'all' || item.group === topicFilter);
-  const jumpToStage = (index: number) => {
-    setJourneyActive(index);
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    document.getElementById(`research-stage-${index}`)?.scrollIntoView({
-      behavior: reducedMotion ? 'instant' : 'smooth', block: 'center',
-    });
-  };
-
   // Keep a returning visitor's language preference, including visits to the root URL.
   useEffect(() => {
     document.cookie = `iojh-book-locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
@@ -233,7 +208,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
           </a>
           <nav id="primary-navigation" className={`primary-nav${navOpen ? ' is-open' : ''}`} aria-label={t.nav.main}>
             <a href="#about" onClick={() => setNavOpen(false)}>{t.nav.about}</a>
-            <a href="#journey" onClick={() => setNavOpen(false)}>{t.nav.journey}</a>
+            <a href="#reviews" onClick={() => setNavOpen(false)}>{t.nav.reviews}</a>
             <a href="#inside" onClick={() => setNavOpen(false)}>{t.nav.inside}</a>
             <button className="nav-reader-button" type="button" onClick={(event) => openReader(event.currentTarget)}>{t.nav.preview}</button>
           </nav>
@@ -342,64 +317,6 @@ export default function BookLanding({ locale }: { locale: Locale }) {
         </section>
 
 
-        <section id="journey" className="section journey-section" aria-labelledby="journey-heading">
-          <div className="container journey-grid">
-            <div className="journey-left">
-              <div className="journey-introduction reveal">
-                <span className="kicker">{t.journey.eyebrow}</span>
-                <h2 id="journey-heading">{t.journey.title}<br /><em>{t.journey.accent}</em></h2>
-                <p>{t.journey.intro}</p>
-              </div>
-              <div className="journey-visual" data-stage={journeyActive} role="region" aria-label={activeScene.accessibleLabel}>
-                <div className="journey-visual-top">
-                  <span>{t.journey.visualLabel}</span>
-                  <span>0{journeyActive + 1} / 03</span>
-                </div>
-                <div key={`${locale}-${journeyActive}`} className="journey-visual-scene">
-                  <span className="journey-large-digit" aria-hidden="true">0{journeyActive + 1}</span>
-                  <div className="journey-visual-content">
-                    <span className="journey-scene-kicker">{activeScene.kicker}</span>
-                    <h3>{activeScene.headline}</h3>
-                    <p>{activeScene.description}</p>
-                  </div>
-                  <div className="journey-visual-milestones" aria-label={t.journey.milestoneLabel}>
-                    {activeScene.milestones.map((word, index) => (
-                      <span key={word}><b>0{index + 1}</b>{word}</span>
-                    ))}
-                  </div>
-                </div>
-                <div className="journey-stage-nav" role="group" aria-label={t.journey.stageNavigation}>
-                  {t.journey.stagesShort.map((label, index) => (
-                    <button
-                      type="button" key={label}
-                      className={journeyActive === index ? 'is-active' : ''}
-                      aria-pressed={journeyActive === index}
-                      aria-label={`${t.journey.jumpTo} ${label}`}
-                      onClick={() => jumpToStage(index)}
-                    ><span>0{index + 1}</span><span>{label}</span></button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="journey-right">
-              <div className="journey-track" aria-hidden="true"><span className="journey-progress" /></div>
-              {t.journey.steps.map((item, index) => (
-                <article
-                  className={`journey-stage-card${journeyActive === index ? ' is-current' : ''}`}
-                  id={`research-stage-${index}`}
-                  key={index}
-                  aria-label={`${index + 1}. ${item.title}`}
-                >
-                  <span className="journey-card-kicker">0{index + 1} / {item.label}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.detail}</p>
-                  <div className="journey-card-footer"><span>{t.journey.stagesShort[index]}</span><span className="journey-card-rule" aria-hidden="true" /></div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section id="inside" className="section contents-section" aria-labelledby="contents-heading">
           <div className="container">
             <div className="section-topline reveal"><span className="kicker">{t.contents.eyebrow}</span><span className="topline-aside">{t.contents.aside}</span></div>
@@ -438,6 +355,8 @@ export default function BookLanding({ locale }: { locale: Locale }) {
           </div>
         </section>
 
+
+        <ReaderReviews locale={locale} />
 
         <section id="details" className="section details-section"><div className="container">
           <div className="section-topline reveal"><span className="kicker">{t.details.eyebrow}</span><span className="topline-aside">{t.details.aside}</span></div>

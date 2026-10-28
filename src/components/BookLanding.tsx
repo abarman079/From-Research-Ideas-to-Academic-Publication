@@ -17,6 +17,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { book, gallery, previewPages, PREVIEW_PDF_URL } from "@/lib/book";
 import HeroFlipReader from "@/components/HeroFlipReader";
+import heroStyles from '@/components/EditorialHero.module.css';
+import SmoothPageScroll from '@/components/SmoothPageScroll';
+import '@/app/hero-smooth-scroll.css';
 import ReaderReviews from "@/components/ReaderReviews";
 import AuthorAndPurchase from "@/components/AuthorAndPurchase";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
@@ -108,16 +111,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
               scrollTrigger: { trigger: el, start: "top 90%", once: true },
             });
           });
-          gsap.to(".hero-gallery-media", {
-            y: 10,
-            ease: "none",
-            scrollTrigger: {
-              trigger: ".hero-section",
-              start: "top top",
-              end: "bottom top",
-              scrub: 0.7,
-            },
-          });
+          // Product photography stays anchored while the page scrolls.
         }, root);
         return () => context.revert();
       },
@@ -239,6 +233,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
 
   return (
     <div ref={root} className="site-wrap">
+      <SmoothPageScroll paused={readerOpen || lightboxOpen} />
       <a className="skip-link" href="#main-content">
         {t.general.skip}
       </a>
@@ -253,7 +248,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
       />
 
       <main id="main-content">
-        <section id="top" className="hero-section">
+        <section id="top" className={`hero-section ${heroStyles.editorialHero}`}>
           <div className="container hero-grid">
             <div className="hero-copy">
               <div className="eyebrow hero-enter">
@@ -282,8 +277,13 @@ export default function BookLanding({ locale }: { locale: Locale }) {
                   <BookOpen size={18} aria-hidden="true" /> {sampleButtonText}
                 </button>
               </div>
-              <div
-                className="hero-facts hero-enter"
+              
+              <ul className={heroStyles.chapterLine} aria-label={locale === 'bn' ? 'বইয়ের তিনটি প্রধান বিষয়' : 'Three core subjects in the book'}>
+                <li><a href="#inside"><span aria-hidden="true" />{locale === 'bn' ? 'গবেষণা পদ্ধতি' : 'Research methods'}</a></li>
+                <li><a href="#inside"><span aria-hidden="true" />{locale === 'bn' ? 'পাণ্ডুলিপি প্রস্তুতি' : 'Manuscript preparation'}</a></li>
+                <li><a href="#inside"><span aria-hidden="true" />{locale === 'bn' ? 'একাডেমিক প্রকাশনা' : 'Academic publication'}</a></li>
+              </ul>
+              <div className="hero-facts hero-enter"
                 aria-label={t.hero.edition}
               >
                 <div>

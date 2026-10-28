@@ -11,7 +11,6 @@ import {
   ChevronRight,
   ExternalLink,
   Maximize2,
-  Menu,
   X,
 } from "lucide-react";
 import gsap from "gsap";
@@ -20,6 +19,7 @@ import { book, gallery, previewPages, PREVIEW_PDF_URL } from "@/lib/book";
 import HeroFlipReader from "@/components/HeroFlipReader";
 import ReaderReviews from "@/components/ReaderReviews";
 import AuthorAndPurchase from "@/components/AuthorAndPurchase";
+import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 import BookTopicsExplorer from "@/components/BookTopicsExplorer";
 import { reviews } from "@/lib/reviews";
 
@@ -242,92 +242,15 @@ export default function BookLanding({ locale }: { locale: Locale }) {
       <a className="skip-link" href="#main-content">
         {t.general.skip}
       </a>
-      <header className="site-header">
-        <div className="header-inner container">
-          <a
-            className="wordmark"
-            href="#top"
-            aria-label={t.nav.home}
-            onClick={() => setNavOpen(false)}
-          >
-            <span className="wordmark-title">
-              IOJH<span>.</span>
-            </span>
-          </a>
-          <nav
-            id="primary-navigation"
-            className={`primary-nav${navOpen ? " is-open" : ""}`}
-            aria-label={t.nav.main}
-          >
-            <a href="#top" onClick={() => setNavOpen(false)}>
-              {t.nav.about}
-            </a>
-            <a href="#inside" onClick={() => setNavOpen(false)}>
-              {t.nav.inside}
-            </a>
-            {hasApprovedReviews && (
-              <a href="#reviews" onClick={() => setNavOpen(false)}>
-                {t.nav.reviews}
-              </a>
-            )}
-            <a href="#details" onClick={() => setNavOpen(false)}>
-              {locale === "bn" ? "লেখক পরিচিতি" : "About the Author"}
-            </a>
-            <button
-              className="nav-reader-button"
-              type="button"
-              onClick={(event) => openReader(event.currentTarget)}
-            >
-              {t.nav.preview}
-            </button>
-          </nav>
-          <div className="header-actions">
-            <div
-              className="language-switch"
-              role="group"
-              aria-label={t.general.localeLabel}
-            >
-              <button
-                type="button"
-                aria-pressed={locale === "bn"}
-                lang="bn"
-                className={locale === "bn" ? "active" : ""}
-                onClick={() => switchLocale("bn")}
-              >
-                বাংলা
-              </button>
-              <span className="language-divider" aria-hidden="true" />
-              <button
-                type="button"
-                aria-pressed={locale === "en"}
-                lang="en"
-                className={locale === "en" ? "active" : ""}
-                onClick={() => switchLocale("en")}
-              >
-                EN
-              </button>
-            </div>
-            <a
-              className="header-order"
-              href="#purchase"
-              onClick={() => setNavOpen(false)}
-            >
-              {t.nav.order} <ArrowUpRight size={15} aria-hidden="true" />
-            </a>
-            <button
-              ref={mobileMenuButton}
-              className="menu-toggle"
-              type="button"
-              aria-label={navOpen ? t.nav.closeMenu : t.nav.openMenu}
-              aria-expanded={navOpen}
-              aria-controls="primary-navigation"
-              onClick={() => setNavOpen(!navOpen)}
-            >
-              {navOpen ? <X size={21} /> : <Menu size={21} />}
-            </button>
-          </div>
-        </div>
-      </header>
+      <SiteHeader
+        locale={locale}
+        hasReviews={hasApprovedReviews}
+        navOpen={navOpen}
+        onNavOpenChange={setNavOpen}
+        menuButtonRef={mobileMenuButton}
+        onPreview={(trigger) => openReader(trigger)}
+        onLocaleChange={switchLocale}
+      />
 
       <main id="main-content">
         <section id="top" className="hero-section">
@@ -516,43 +439,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
         </section>
       </main>
 
-      <footer className="site-footer">
-        <div className="container footer-main">
-          <div className="footer-identity">
-            <div className="footer-mark">
-              IOJH<span>.</span>
-            </div>
-            <p>{t.footer.tagline}</p>
-          </div>
-          <nav
-            className="footer-nav"
-            aria-label={
-              locale === "bn" ? "ফুটার নেভিগেশন" : "Footer navigation"
-            }
-          >
-            <a href="#top">{locale === "bn" ? "বই পরিচিতি" : "The Book"}</a>
-            <a href="#inside">
-              {locale === "bn" ? "বইয়ের বিষয়বস্তু" : "Inside the Book"}
-            </a>
-            <a href="#details">
-              {locale === "bn" ? "লেখক পরিচিতি" : "About the Author"}
-            </a>
-            <a href="#purchase">
-              {locale === "bn" ? "কোথায় কিনবেন" : "Where to Buy"}
-            </a>
-          </nav>
-          <a className="footer-buy-link" href="#purchase">
-            {locale === "bn" ? "বইটি সংগ্রহ করুন" : "Find Your Copy"}{" "}
-            <ArrowUpRight size={16} aria-hidden="true" />
-          </a>
-        </div>
-        <div className="container footer-meta">
-          <span>
-            © {new Date().getFullYear()} {t.footer.collection}
-          </span>
-          <span>ISBN {book.isbn}</span>
-        </div>
-      </footer>
+      <SiteFooter locale={locale} hasReviews={hasApprovedReviews} onPreview={(trigger) => openReader(trigger)} />
 
       {lightboxOpen && (
         <div

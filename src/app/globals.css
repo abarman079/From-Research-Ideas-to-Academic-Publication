@@ -1374,15 +1374,39 @@ html[lang="en"] .testimonials-intro h2 { font-family: Georgia, 'Times New Roman'
 }
 
 
-/* Final header logo size refinement */
-.site-header .wordmark {
-  transform: scale(1.14);
-  transform-origin: left center;
+
+/* FINAL — IOJH Original Logo Size Adjustment */
+
+/* Desktop */
+.brandLink .brandImage {
+  width: auto;
+  height: 54px;
+  max-width: 205px;
+  max-height: none;
+  object-fit: contain;
+  object-position: left center;
 }
 
-/* Keep mobile navigation balanced */
-@media (max-width: 780px) {
-  .site-header .wordmark {
-    transform: scale(1.07);
+/* Tablet */
+@media (max-width: 1020px) {
+  .brandLink .brandImage {
+    height: 48px;
+    max-width: 170px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .brandLink .brandImage {
+    height: 44px;
+    max-width: 150px;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 365px) {
+  .brandLink .brandImage {
+    height: 41px;
+    max-width: 140px;
   }
 }

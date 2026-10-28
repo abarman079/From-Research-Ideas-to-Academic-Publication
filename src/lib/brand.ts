@@ -5,7 +5,7 @@
  * Example: export const IOJH_LOGO_PATH: string | null = '/brand/iojh-logo.png';
  * A null value displays a simple typographic fallback until you add the asset.
  */
-export const IOJH_LOGO_PATH: string | null = "/brand/iojh-logo.png";
+export const IOJH_LOGO_PATH: string | null = "/brand/iojh-logo-cropped.png";
 
 /** Official website and retailer page links. */
 export const IOJH_WEBSITE_URL = "https://iojh.com.bd/";

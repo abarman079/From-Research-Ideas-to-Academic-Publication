@@ -344,3 +344,50 @@
   .header *, .footer * { animation: none !important; transition: none !important; }
   .headerOrder:hover, .footerCTA:hover { transform: none; }
 }
+
+
+/* IOJH LOGO SIZE FINAL — START */
+/* Keep the artwork legible while preserving header alignment. */
+.header .headerInner { min-height: 94px; }
+.header .brandLink { min-width: 132px; }
+.header .brandLink .brandImage {
+  display: block;
+  width: auto;
+  height: 66px;
+  max-width: 210px;
+  max-height: none;
+  object-fit: contain;
+  object-position: left center;
+}
+.header .brandDescriptor { margin-top: -2px; font-size: 9px; }
+/* The footer has its own larger mark, without affecting the header. */
+.footer .footerLogoPlate {
+  min-height: 112px;
+  min-width: 194px;
+  padding: 10px 20px;
+  justify-content: flex-start;
+}
+.footer .footerLogoPlate .brandImage {
+  width: auto;
+  height: 86px;
+  max-width: 200px;
+  max-height: none;
+  object-fit: contain;
+}
+@media (max-width: 1020px) {
+  .header .headerInner { min-height: 79px; }
+  .header .brandLink .brandImage { height: 56px; max-width: 180px; }
+}
+@media (max-width: 640px) {
+  .header .headerInner { min-height: 74px; }
+  .header .brandLink { min-width: 0; }
+  .header .brandLink .brandImage { height: 49px; max-width: 102px; }
+  .header .brandDescriptor { font-size: 8px; letter-spacing: .02em; }
+  .footer .footerLogoPlate .brandImage { height: 78px; }
+}
+@media (max-width: 365px) {
+  .header .headerInner { min-height: 70px; }
+  .header .brandLink .brandImage { height: 43px; max-width: 90px; }
+  .header .brandDescriptor { display: none; }
+}
+/* IOJH LOGO SIZE FINAL — END */

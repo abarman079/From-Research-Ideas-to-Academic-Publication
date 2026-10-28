@@ -38,7 +38,7 @@ export default function BookFAQ({ locale }: { locale: Locale }) {
               name="iojh-faq-accordion"
               className={styles.item}
               key={index}
-              defaultOpen={index === 0}
+              open={index === 0}
             >
               <summary className={styles.question}>
                 <span className={styles.number}>{String(index + 1).padStart(2, '0')}</span>

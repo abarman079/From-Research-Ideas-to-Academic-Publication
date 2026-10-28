@@ -1,202 +1,344 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, ChevronLeft, ChevronRight, X, BookOpen } from 'lucide-react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent,
+} from 'react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, Minus, Plus, RotateCcw, X } from 'lucide-react';
 import type { Locale } from '@/i18n/copy';
+import styles from './HeroFlipReader.module.css';
 
-type Sample = { src: string };
-type FlipEngine = {
-  flipNext: (corner: 'top' | 'bottom') => void;
-  flipPrev: (corner: 'top' | 'bottom') => void;
-  flip: (page: number, corner: 'top' | 'bottom') => void;
-  turnToNextPage: () => void;
-  turnToPrevPage: () => void;
-  turnToPage: (page: number) => void;
-  destroy: () => void;
-};
-
+type SamplePage = { src: string };
 type Props = {
   locale: Locale;
-  pages: Sample[];
+  pages: SamplePage[];
   productUrl: string;
   onClose: () => void;
   onChooseStore?: () => void;
+  /** Kept for compatibility with older BookLanding; never shown or used. */
+  pdfUrl?: string | null;
 };
+type Direction = 'forward' | 'backward';
+type Turn = { from: number; to: number; direction: Direction; single: boolean };
+type Dimensions = { width: number; height: number };
 
+const TURN_DURATION = 920;
+const MIN_ZOOM = 100;
+const MAX_ZOOM = 300;
+const ZOOM_INCREMENT = 25;
+const MOBILE_MEDIA = '(max-width: 740px)';
+
+/**
+ * Physically laid out book spreads:
+ *   [1|2] [3|4] ... [13|14] [15|blank].
+ * On narrow screens readers can view every page individually.
+ * React owns all page DOM; no third-party library removes React nodes.
+ */
 export default function HeroFlipReader({ locale, pages, productUrl, onClose, onChooseStore }: Props) {
-  const isBangla = locale === 'bn';
-  const mountHost = useRef<HTMLDivElement>(null);
-  const engine = useRef<FlipEngine | null>(null);
-  const modal = useRef<HTMLDivElement>(null);
-  const closeButton = useRef<HTMLButtonElement>(null);
-  const onCloseRef = useRef(onClose);
-  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
-  const [current, setCurrent] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const bangla = locale === 'bn';
   const total = pages.length;
+  const [pageIndex, setPageIndex] = useState(0);
+  const [single, setSingle] = useState(false);
+  const [zoom, setZoom] = useState(100);
+  const [turn, setTurn] = useState<Turn | null>(null);
+  const [dimensions, setDimensions] = useState<Dimensions>({ width: 900, height: 560 });
+  // Fixed page geometry: image load events must never resize the book during a turn.
+  // The sample JPGs are portrait pages with consistent proportions.
+  const PAGE_ASPECT = 0.715;
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const [failedImages, setFailedImages] = useState<Record<number, boolean>>({});
 
-  const label = {
-    eyebrow: isBangla ? 'IOJH / বিনামূল্যের বই প্রিভিউ' : 'IOJH / COMPLIMENTARY BOOK PREVIEW',
-    title: isBangla ? 'বইয়ের পৃষ্ঠা উল্টে পড়ুন' : 'Turn the Pages. Explore the Book.',
-    tip: isBangla ? 'পাতার কোণা ধরে টানুন, অথবা তীর চিহ্নে ক্লিক করুন।' : 'Drag a page corner or use the navigation arrows.',
-    original: isBangla ? 'মূল বাংলা সংস্করণের নির্বাচিত নমুনা পৃষ্ঠা' : 'Selected pages from the original Bengali edition',
-    loading: isBangla ? 'নমুনা পৃষ্ঠা প্রস্তুত হচ্ছে…' : 'Preparing the sample pages…',
-    failed: isBangla ? 'পেজ-টার্ন প্রিভিউ লোড করা যায়নি। নিচের লিংক দিয়ে পৃষ্ঠা খুলুন।' : 'The page-turning preview could not load. Open an individual page below.',
-    page: isBangla ? 'পৃষ্ঠা' : 'Page',
-    close: isBangla ? 'রিডার বন্ধ করুন' : 'Close reader',
-    previous: isBangla ? 'আগের পৃষ্ঠা' : 'Previous page',
-    next: isBangla ? 'পরের পৃষ্ঠা' : 'Next page',
-    originalPage: isBangla ? 'সম্পূর্ণ পৃষ্ঠা দেখুন' : 'View full-size page',
-    order: isBangla ? 'মুদ্রিত বইটি অর্ডার করুন' : 'Order the Printed Book',
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const thumbRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const previousFocus = useRef<HTMLElement | null>(null);
+  const closeHandler = useRef(onClose);
+  const gesture = useRef<{ x: number; y: number } | null>(null);
+  const turnTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => { closeHandler.current = onClose; }, [onClose]);
+
+  const copy = {
+    eyebrow: bangla ? 'বইয়ের নির্বাচিত ১৫ পৃষ্ঠা' : '15 SAMPLE PAGES',
+    heading: bangla ? 'বইয়ের নমুনা পড়ুন' : 'Read a Sample',
+    instructions: bangla ? 'তীরচিহ্নে পৃষ্ঠা উল্টান। লেখা বড় করতে + চাপুন।' : 'Turn a page with the arrows. Zoom in to read the text.',
+    page: bangla ? 'পৃষ্ঠা' : 'Page',
+    pages: bangla ? 'পৃষ্ঠা' : 'Pages',
+    close: bangla ? 'বন্ধ করুন' : 'Close reader',
+    prev: bangla ? 'আগের পৃষ্ঠা' : 'Previous pages',
+    next: bangla ? 'পরের পৃষ্ঠা' : 'Next pages',
+    zoomIn: bangla ? 'বড় করে দেখুন' : 'Zoom in',
+    zoomOut: bangla ? 'ছোট করে দেখুন' : 'Zoom out',
+    fit: bangla ? 'পুরো বই দেখুন' : 'Fit book',
+    jump: bangla ? 'পৃষ্ঠা বেছে নিন' : 'Choose a page',
+    buy: bangla ? 'কোথায় কিনবেন' : 'Where to Buy',
+    missing: bangla ? 'পৃষ্ঠা পাওয়া যায়নি' : 'Page image missing',
   };
 
-  // Create the animation engine only after opening the reader, on the browser.
-  // StPageFlip draws real page folds from the original sample JPGs; it does not retype any Bangla.
   useEffect(() => {
-    let cancelled = false;
-    let instance: FlipEngine | null = null;
-    const host = mountHost.current;
-    if (!host || pages.length === 0) { setLoading(false); setError(true); return; }
-
-    const init = async () => {
-      try {
-        const { PageFlip } = await import('page-flip');
-        if (cancelled || !mountHost.current) return;
-
-        // A separate DOM mount lets the library clean itself up safely in React Strict Mode.
-        const mount = document.createElement('div');
-        mount.className = 'flip-library-mount';
-        mount.style.width = '100%';
-        mount.style.height = '100%';
-        host.appendChild(mount);
-
-        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const flip = new PageFlip(mount, {
-          width: 440,
-          height: 620,
-          size: 'stretch',
-          minWidth: 190,
-          maxWidth: 490,
-          minHeight: 270,
-          maxHeight: 690,
-          usePortrait: true,
-          showCover: false,
-          autoSize: false,
-          drawShadow: true,
-          maxShadowOpacity: 0.4,
-          flippingTime: reducedMotion ? 80 : 850,
-          mobileScrollSupport: false,
-          swipeDistance: 35,
-        });
-        instance = flip;
-        engine.current = flip;
-        flip.on('flip', (e: { data: number | string }) => {
-          if (!cancelled) setCurrent(Math.max(0, Math.min(total - 1, Number(e.data) || 0)));
-        });
-        flip.loadFromImages(pages.map((item) => item.src));
-        if (!cancelled) { setLoading(false); setError(false); }
-      } catch (err) {
-        console.error('IOJH book preview could not load:', err);
-        if (!cancelled) { setLoading(false); setError(true); }
-      }
-    };
-    void init();
-
-    return () => {
-      cancelled = true;
-      engine.current = null;
-      try { instance?.destroy(); } catch { /* Some versions remove the mount themselves. */ }
-      if (host) host.replaceChildren();
-    };
-    // pages is a stable module-level array from src/lib/book.ts.
-  }, [pages, total]);
+    const root = viewportRef.current;
+    if (!root) return;
+    const measure = () => setDimensions({ width: root.clientWidth, height: root.clientHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(root);
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
+    const media = window.matchMedia(MOBILE_MEDIA);
+    const update = () => {
+      setSingle(media.matches);
+      setTurn(null);
+      if (!media.matches) setPageIndex(p => Math.floor(p / 2) * 2);
+    };
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReduceMotion(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    previousFocus.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const existing = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    closeButton.current?.focus();
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { e.preventDefault(); onCloseRef.current(); return; }
-      if (e.key === 'ArrowRight') { e.preventDefault(); if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) engine.current?.turnToNextPage(); else engine.current?.flipNext('bottom'); }
-      if (e.key === 'ArrowLeft') { e.preventDefault(); if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) engine.current?.turnToPrevPage(); else engine.current?.flipPrev('bottom'); }
-      if (e.key === 'Home') { e.preventDefault(); engine.current?.turnToPage(0); }
-      if (e.key === 'End') { e.preventDefault(); engine.current?.turnToPage(total - 1); }
-      if (e.key === 'Tab') {
-        const controls = modal.current?.querySelectorAll<HTMLElement>('button:not(:disabled), a[href]');
-        if (!controls?.length) return;
-        const first = controls[0];
-        const last = controls[controls.length - 1];
-        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    closeRef.current?.focus({ preventScroll: true });
+    return () => {
+      document.body.style.overflow = existing;
+      previousFocus.current?.focus({ preventScroll: true });
+    };
+  }, []);
+
+  const endTurn = useCallback(() => {
+    if (!turn) return;
+    setPageIndex(turn.to);
+    setTurn(null);
+  }, [turn]);
+
+  useEffect(() => {
+    if (!turn) return;
+    if (turnTimeout.current) clearTimeout(turnTimeout.current);
+    turnTimeout.current = setTimeout(endTurn, TURN_DURATION + 90);
+    return () => { if (turnTimeout.current) clearTimeout(turnTimeout.current); };
+  }, [turn, endTurn]);
+
+  const navigate = useCallback((requested: number) => {
+    if (turn || total < 1) return;
+    const target = Math.max(0, Math.min(total - 1, requested));
+    const normalized = single ? target : Math.floor(target / 2) * 2;
+    const from = single ? pageIndex : Math.floor(pageIndex / 2) * 2;
+    if (from === normalized) return;
+    setZoom(100); // Turn at book-fit size; the reader may zoom in again afterwards.
+    if (reduceMotion || Math.abs(normalized - from) > (single ? 1 : 2)) {
+      // Direct thumbnail jumps don't animate across unrelated spreads.
+      setPageIndex(normalized);
+      return;
+    }
+    setTurn({ from, to: normalized, single, direction: normalized > from ? 'forward' : 'backward' });
+  }, [single, pageIndex, turn, total, reduceMotion]);
+
+  const currentStart = single ? pageIndex : Math.floor(pageIndex / 2) * 2;
+  const lastStart = single ? total - 1 : Math.floor((total - 1) / 2) * 2;
+  const previous = () => navigate(currentStart - (single ? 1 : 2));
+  const next = () => navigate(currentStart + (single ? 1 : 2));
+
+  useEffect(() => {
+    const handleKeys = (event: KeyboardEvent) => {
+      const target = event.target;
+      if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement) return;
+      if (event.key === 'Escape') { event.preventDefault(); closeHandler.current(); }
+      if (event.key === 'ArrowLeft') { event.preventDefault(); navigate(currentStart - (single ? 1 : 2)); }
+      if (event.key === 'ArrowRight') { event.preventDefault(); navigate(currentStart + (single ? 1 : 2)); }
+      if (event.key === 'Home') { event.preventDefault(); navigate(0); }
+      if (event.key === 'End') { event.preventDefault(); navigate(total - 1); }
+      if (event.key === 'Tab') {
+        const elements = dialogRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]), a[href]');
+        if (!elements?.length) return;
+        const first = elements[0];
+        const last = elements[elements.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
       }
     };
-    window.addEventListener('keydown', onKeyDown);
-    return () => { document.body.style.overflow = previousOverflow; window.removeEventListener('keydown', onKeyDown); };
-  }, [total]);
+    window.addEventListener('keydown', handleKeys);
+    return () => window.removeEventListener('keydown', handleKeys);
+  }, [currentStart, single, total, navigate]);
 
-  const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const nextPage = () => {
-    if (current >= total - 1) return;
-    if (reduced()) engine.current?.turnToNextPage();
-    else engine.current?.flipNext('bottom');
+  // Warm the image cache for the visible and next spreads to prevent white flashes.
+  useEffect(() => {
+    for (let i = Math.max(0, currentStart - 2); i < Math.min(total, currentStart + 4); i++) {
+      const preloaded = new window.Image();
+      preloaded.src = pages[i].src;
+    }
+  }, [currentStart, pages, total]);
+
+  useEffect(() => {
+    thumbRefs.current[currentStart]?.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+  }, [currentStart]);
+
+  const aspect = PAGE_ASPECT;
+  const pageCount = single ? 1 : 2;
+  const widthAvailable = Math.max(150, dimensions.width - 98);
+  const heightAvailable = Math.max(130, dimensions.height - 36);
+  const fitHeight = Math.min(heightAvailable, widthAvailable / (pageCount * aspect));
+  const fitWidth = fitHeight * aspect * pageCount;
+  const scaledHeight = Math.round(fitHeight * zoom / 100);
+  const scaledWidth = Math.round(fitWidth * zoom / 100);
+  const canvasWidth = Math.max(dimensions.width, scaledWidth + 48);
+  const canvasHeight = Math.max(dimensions.height, scaledHeight + 36);
+  const rightIndex = currentStart + 1;
+
+  useEffect(() => {
+    const scroll = viewportRef.current;
+    if (!scroll) return;
+    const id = requestAnimationFrame(() => {
+      scroll.scrollTop = Math.max(0, (scroll.scrollHeight - scroll.clientHeight) / 2);
+      scroll.scrollLeft = Math.max(0, (scroll.scrollWidth - scroll.clientWidth) / 2);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [zoom, currentStart, dimensions.width, dimensions.height, single]);
+
+  function onGestureStart(event: PointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== 'touch' || zoom !== 100) return;
+    gesture.current = { x: event.clientX, y: event.clientY };
+  }
+  function onGestureEnd(event: PointerEvent<HTMLDivElement>) {
+    const start = gesture.current;
+    gesture.current = null;
+    if (!start || zoom !== 100) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.35) {
+      navigate(currentStart + (dx < 0 ? 1 : -1) * (single ? 1 : 2));
+    }
+  }
+
+  const effectiveTurn = turn && !reduceMotion ? turn : null;
+  const baseLeft = effectiveTurn && !effectiveTurn.single
+    ? (effectiveTurn.direction === 'forward' ? effectiveTurn.from : effectiveTurn.to)
+    : currentStart;
+  const baseRight = effectiveTurn && !effectiveTurn.single
+    ? (effectiveTurn.direction === 'forward' ? effectiveTurn.to + 1 : effectiveTurn.from + 1)
+    : rightIndex;
+  const faceFrontIndex = effectiveTurn
+    ? (effectiveTurn.single ? effectiveTurn.from : effectiveTurn.direction === 'forward' ? effectiveTurn.from + 1 : effectiveTurn.from)
+    : -1;
+  const faceBackIndex = effectiveTurn
+    ? (effectiveTurn.single ? effectiveTurn.to : effectiveTurn.direction === 'forward' ? effectiveTurn.to : effectiveTurn.to + 1)
+    : -1;
+  const reportIndex = turn ? turn.to : currentStart;
+  const visibleLast = single ? reportIndex : Math.min(total - 1, reportIndex + 1);
+  const formattedCount = visibleLast > reportIndex
+    ? `${reportIndex + 1}–${visibleLast + 1}` : `${reportIndex + 1}`;
+
+  const renderImage = (index: number, label?: string) => {
+    if (index < 0 || index >= total) return <div className={styles.blank} aria-hidden="true"/>;
+    const url = pages[index].src;
+    if (failedImages[index]) return <div className={styles.missing} role="alert">{copy.missing}: {index + 1}</div>;
+    return (
+      // Native img preserves the original JPG; it is not recompressed by Next/Image.
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={url} alt={label ?? `${copy.page} ${index + 1}`} draggable={false}
+        className={styles.pageImage}
+        onError={() => setFailedImages(previous => ({ ...previous, [index]: true }))}
+      />
+    );
   };
-  const previousPage = () => {
-    if (current <= 0) return;
-    if (reduced()) engine.current?.turnToPrevPage();
-    else engine.current?.flipPrev('bottom');
-  };
-  const jumpTo = (page: number) => {
-    if (reduced()) engine.current?.turnToPage(page);
-    else engine.current?.flip(page, 'bottom');
-  };
+
+  if (!total) return null;
 
   return (
-    <div className="flip-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <div className="flip-modal" ref={modal} role="dialog" aria-modal="true" aria-labelledby="flip-reader-title" aria-describedby="flip-reader-tip">
-        <header className="flip-header">
+    <div className={styles.backdrop} onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }}>
+      <section className={styles.dialog} role="dialog" aria-modal="true" aria-labelledby="iojh-reader-title"
+        aria-describedby="iojh-reader-description" ref={dialogRef}>
+        <header className={styles.header}>
           <div>
-            <p>{label.eyebrow}</p>
-            <h2 id="flip-reader-title">{label.title}</h2>
+            <span className={styles.eyebrow}>{copy.eyebrow}</span>
+            <h2 id="iojh-reader-title">{copy.heading}</h2>
           </div>
-          <button type="button" ref={closeButton} className="flip-close" onClick={onClose} aria-label={label.close}><X size={21} aria-hidden="true"/></button>
+          <button className={styles.close} type="button" aria-label={copy.close} onClick={onClose} ref={closeRef}><X size={21}/></button>
         </header>
 
-        <div className="flip-subheader">
-          <span id="flip-reader-tip">{label.tip}</span>
-          <span className="flip-page-count" role="status" aria-live="polite">{label.page} {current + 1} / {total}</span>
+        <div className={styles.toolbar}>
+          <p className={styles.instructions} id="iojh-reader-description">{copy.instructions}</p>
+          <div className={styles.controls}>
+            <div className={styles.zoomControls} role="group" aria-label={copy.zoomIn}>
+              <button type="button" onClick={() => setZoom(z => Math.max(MIN_ZOOM, z - ZOOM_INCREMENT))} disabled={zoom === MIN_ZOOM} aria-label={copy.zoomOut}><Minus size={16}/></button>
+              <output>{zoom}%</output>
+              <button type="button" onClick={() => setZoom(z => Math.min(MAX_ZOOM, z + ZOOM_INCREMENT))} disabled={zoom === MAX_ZOOM} aria-label={copy.zoomIn}><Plus size={16}/></button>
+              <button type="button" onClick={() => setZoom(100)} aria-label={copy.fit} title={copy.fit}><RotateCcw size={16}/></button>
+            </div>
+            <strong className={styles.counter} aria-live="polite">{copy.pages} {formattedCount} / {total}</strong>
+          </div>
         </div>
 
-        <div className="flip-desk">
-          <div className="flip-stage">
-            <div className="flip-mount-host" ref={mountHost} role="group" aria-label={label.original} />
+        <div className={styles.stage}>
+          <div className={styles.viewport} ref={viewportRef} style={{ touchAction: zoom > 100 ? 'auto' : 'pan-y' }}
+            onPointerDown={onGestureStart} onPointerUp={onGestureEnd} onPointerCancel={() => { gesture.current = null; }}>
+            <div className={styles.canvas} style={{ width: canvasWidth, height: canvasHeight }}>
+              <div className={`${styles.book} ${single ? styles.singleBook : ''}`} style={{ width: scaledWidth, height: scaledHeight }}>
+                {single ? (
+                  <div className={`${styles.page} ${styles.singlePage}`}>{renderImage(effectiveTurn ? effectiveTurn.to : currentStart)}</div>
+                ) : (
+                  <>
+                    <div className={`${styles.page} ${styles.leftPage}`}>{renderImage(baseLeft)}</div>
+                    <div className={`${styles.page} ${styles.rightPage}`}>{renderImage(baseRight)}</div>
+                    <div className={styles.spine} aria-hidden="true"/>
+                  </>
+                )}
+
+                {effectiveTurn && (
+                  <div key={`${effectiveTurn.from}-${effectiveTurn.to}-${effectiveTurn.single}`} className={`${styles.flippingLeaf} ${effectiveTurn.direction === 'forward' ? styles.forward : styles.backward} ${effectiveTurn.single ? styles.fullLeaf : ''}`}
+                    onAnimationEnd={e => { if (e.target === e.currentTarget) endTurn(); }} aria-hidden="true">
+                    <div className={styles.leafFlex}>
+                      <div className={`${styles.leafFace} ${styles.leafFront}`}>{renderImage(faceFrontIndex, '')}<div className={styles.shine}/></div>
+                      <div className={`${styles.leafFace} ${styles.leafBack}`}>{renderImage(faceBackIndex, '')}<div className={styles.shine}/></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-          {loading && <div className="flip-wait" role="status"><BookOpen size={20} aria-hidden="true"/> {label.loading}</div>}
-          {error && <div className="flip-wait"><div className="flip-warning">{label.failed}</div></div>}
-          <button type="button" className="flip-previous" onClick={previousPage} disabled={loading || error || current <= 0} aria-label={label.previous}><ChevronLeft size={24}/></button>
-          <button type="button" className="flip-next" onClick={nextPage} disabled={loading || error || current >= total - 1} aria-label={label.next}><ChevronRight size={24}/></button>
+          <button type="button" className={`${styles.arrow} ${styles.prev}`} aria-label={copy.prev} onClick={previous}
+            disabled={currentStart === 0 || !!turn}><ChevronLeft size={22}/></button>
+          <button type="button" className={`${styles.arrow} ${styles.next}`} aria-label={copy.next} onClick={next}
+            disabled={currentStart >= lastStart || !!turn}><ChevronRight size={22}/></button>
         </div>
 
-        <footer className="flip-footer">
-          <div className="flip-thumbs" aria-label={label.original}>
-            {pages.map((page, index) => (
-              <button key={page.src} type="button" className="flip-thumb" onClick={() => jumpTo(index)} disabled={loading || error} aria-current={current === index ? 'page' : undefined} aria-label={`${label.page} ${index + 1}`}>
-                {/* Native image is appropriate here: thumbnails are static preview JPGs. */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={page.src} alt="" loading="lazy" />
-              </button>
-            ))}
-          </div>
-          <div className="flip-footer-actions">
-            <a className="flip-text-link" href={pages[current]?.src} target="_blank" rel="noopener noreferrer">{label.originalPage} <ArrowUpRight size={15} /></a>
-            {onChooseStore ? (
-              <button type="button" className="flip-order" onClick={onChooseStore}>{isBangla ? 'কোথায় কিনবেন' : 'Choose a Store'} <ArrowUpRight size={15} aria-hidden="true"/></button>
-            ) : (
-              <a className="flip-order" href={productUrl} target="_blank" rel="noopener noreferrer">{label.order} <ArrowUpRight size={15}/></a>
-            )}
-          </div>
+        <footer className={styles.footer}>
+          <nav className={styles.thumbnails} aria-label={copy.jump}>
+            {pages.map((page, index) => {
+              const isActive = single ? index === currentStart : (index === currentStart || index === currentStart + 1);
+              return (
+                <button key={page.src} type="button" ref={node => { thumbRefs.current[index] = node; }}
+                  className={`${styles.thumbnail} ${isActive ? styles.active : ''}`}
+                  aria-current={isActive ? 'page' : undefined} aria-label={`${copy.page} ${index + 1}`}
+                  onClick={() => navigate(index)} disabled={!!turn}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={page.src} alt="" loading="lazy" draggable={false}/>
+                  <span>{index + 1}</span>
+                </button>
+              );
+            })}
+          </nav>
+          {onChooseStore ? (
+            <button type="button" className={styles.buy} onClick={onChooseStore}>{copy.buy}<ArrowUpRight size={15}/></button>
+          ) : (
+            <a className={styles.buy} href={productUrl} target="_blank" rel="noopener noreferrer">{copy.buy}<ArrowUpRight size={15}/></a>
+          )}
         </footer>
-      </div>
+      </section>
     </div>
   );
 }

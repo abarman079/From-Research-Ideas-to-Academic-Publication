@@ -1,4 +1,4 @@
-/** Actual book identity and public image locations. Keep source/full manuscripts outside /public. */
+/** IOJH book — product information and approved public product photographs. */
 export const book = {
   title: 'রিসার্চ মেথড, ম্যানুস্ক্রিপ্ট প্রিপারেশন এবং পাবলিকেশন',
   englishTitle: 'Research Method, Manuscript Preparation and Publication',
@@ -15,13 +15,18 @@ export const gallery = [
   { id: 'front', src: `${base}/hero/cover-main.jpg` },
   { id: 'back', src: `${base}/gallery/back-cover.jpg` },
   { id: 'spine', src: `${base}/gallery/spine.jpg` },
-  { id: 'inside', src: `${base}/gallery/interior.jpg` },
+  { id: 'inside', src: `${base}/gallery/interior-v2.jpg` },
 ];
 
-// Only the approved original-language sample images are public.
-// Change 5 to 6 after you add preview/sample-06.jpg to the SAME image directory.
-// Never upload your full 504-page PDF to the public folder.
-export const SAMPLE_PAGE_COUNT: 5 | 6 = 5;
-export const previewPages = Array.from({ length: SAMPLE_PAGE_COUNT }, (_, i) => ({
-  src: `${base}/preview/sample-${String(i + 1).padStart(2, '0')}.jpg`,
+/**
+ * The reader only uses the 15 approved JPG pages.
+ * These two null exports are retained for compatibility with the older
+ * BookLanding.tsx (which still imports PREVIEW_PDF_URL). No PDF is linked.
+ */
+export const PREVIEW_PDF_FILENAME: string | null = null;
+export const PREVIEW_PDF_URL: string | null = null;
+
+export const SAMPLE_PAGE_COUNT = 15;
+export const previewPages = Array.from({ length: SAMPLE_PAGE_COUNT }, (_, index) => ({
+  src: `${base}/preview/research-book-first-15-pages_page-${String(index + 1).padStart(4, '0')}.jpg`,
 }));

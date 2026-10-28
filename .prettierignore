@@ -1,0 +1,14 @@
+# Build directories
+.next/
+out/
+build/
+
+# Dependencies
+node_modules/
+
+# Minified third-party assets
+public/pdf.worker.min.mjs
+
+# Lockfiles and system files
+package-lock.json
+.DS_Store

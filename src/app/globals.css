@@ -1303,3 +1303,72 @@ html[lang="en"] .testimonials-intro h2 { font-family: Georgia, 'Times New Roman'
   .theme-card { transition: none; }
   .theme-card:hover { transform: none; }
 }
+
+
+/* ===== IOJH editorial refinement / 15-page preview update ===== */
+.sr-only { position: absolute !important; width: 1px !important; height: 1px !important; padding: 0 !important; margin: -1px !important; overflow: hidden !important; clip: rect(0,0,0,0) !important; white-space: nowrap !important; border: 0 !important; }
+.site-header { height: 74px; background: rgba(248,246,241,.97); border-bottom: 1px solid #e4e6e0; box-shadow: none; }
+.header-inner { gap: clamp(14px,2.2vw,30px); }
+.wordmark { min-width: 88px; }
+.wordmark-title { font-size: 31px; letter-spacing: -.075em; }
+.primary-nav { gap: clamp(15px,2.1vw,30px); }
+.primary-nav a, .primary-nav .nav-reader-button { font-size: 13px; font-weight: 600; letter-spacing: 0; }
+.primary-nav a::after, .primary-nav .nav-reader-button::after { display: none; }
+.primary-nav a:hover, .primary-nav .nav-reader-button:hover { color: #3b71a8; }
+.language-switch { border-radius: 8px; border-color: #e0e5df; background: #f2f4f0; }
+.language-switch button { border-radius: 6px; }
+.header-order { min-height: 41px; border-radius: 6px; padding: 10px 16px; }
+.hero-pretitle { color: #176f43; font-size: clamp(17px,1.55vw,22px); line-height: 1.6; font-weight: 650; letter-spacing: -.01em; margin: 18px 0 17px; max-width: 570px; }
+.hero-grid { min-height: auto; padding-top: clamp(46px,5vw,82px); padding-bottom: clamp(58px,5vw,86px); }
+.contents-section .section-heading { margin-top: 0; }
+.contents-section .contents-explorer-header { margin-top: 20px; }
+.contents-section .theme-card { box-shadow: none; }
+.contents-section .theme-card-index { opacity: .6; }
+.faq-section .faq-grid h2 { margin-top: 0; }
+.flip-header h2 { font-weight: 600; letter-spacing: -.01em; }
+.flip-error-detail { font-size: 12px; color: #8c4240; margin: 10px 0 0; overflow-wrap: anywhere; }
+.flip-wait { display: flex; align-items: center; justify-content: center; gap: 9px; background: #f5f6f0e8; padding: 20px; text-align: center; }
+.flip-footer-actions a:focus-visible, .flip-footer-actions button:focus-visible { outline: 3px solid #4d7db7; outline-offset: 2px; }
+@media (max-width: 980px) { .site-header { height: 70px; } .primary-nav { top: 69px; } }
+@media (max-width: 780px) {
+  .header-inner { gap: 9px; }
+  .site-header { height: 66px; }
+  .primary-nav { top: 65px; padding: 16px 20px 24px; border-radius: 0 0 12px 12px; }
+  .primary-nav a, .primary-nav .nav-reader-button { min-height: 42px; display: inline-flex; align-items: center; }
+  .wordmark { min-width: 65px; }
+  .wordmark-title { font-size: 28px; }
+  .header-order { padding: 9px 11px; font-size: 11px; }
+  .hero-pretitle { font-size: 17px; }
+  .flip-footer { gap: 7px; }
+}
+@media (prefers-reduced-motion: reduce) { .primary-nav *, .language-switch *, .header-order { animation: none !important; transition: none !important; } }
+
+/* ==========================================================
+   BOOK READER: lossless PDF page rendering and readable mode
+   ========================================================== */
+.flip-reading-controls { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+.flip-mode-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 8px 12px; background: #fffefa; color: #16354b; border: 1px solid #bacbcf; font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+.flip-mode-button:hover:not(:disabled) { background: #e9f0f0; border-color: #829ba7; }
+.flip-mode-button:disabled { opacity: .5; cursor: not-allowed; }
+.flip-zoom-controls { display: inline-flex; align-items: center; gap: 3px; background: #fffefa; border: 1px solid #c6d0d2; }
+.flip-zoom-controls button { width: 31px; height: 33px; display: grid; place-items: center; border: 0; background: transparent; color: #18384b; }
+.flip-zoom-controls button:hover:not(:disabled) { background: #eaf0f1; }
+.flip-zoom-controls button:disabled { opacity: .35; }
+.flip-zoom-controls > span { min-width: 44px; text-align: center; font-size: 12px; font-weight: 700; color: #19384a; }
+.flip-desk-reading .flip-stage { visibility: hidden; pointer-events: none; }
+.flip-focus-stage { position: absolute; inset: 0; z-index: 2; overflow: auto; background: #e8ebe9; padding: 22px 58px 30px; text-align: center; overscroll-behavior: contain; scrollbar-gutter: stable; }
+.flip-focus-page { display: block; height: auto; max-width: none; margin: 0 auto; box-shadow: 0 9px 30px rgba(14,35,45,.17); background: white; object-fit: contain; image-rendering: auto; }
+.flip-desk-reading .flip-previous, .flip-desk-reading .flip-next { z-index: 4; }
+@media(max-width:780px) {
+  .flip-subheader { flex-wrap: wrap; }
+  .flip-reading-controls { width: 100%; justify-content: space-between; gap: 7px; }
+  .flip-mode-button { padding: 7px 8px; font-size: 11px; }
+  .flip-zoom-controls button { width: 28px; }
+  .flip-focus-stage { padding: 12px 35px 22px; }
+}
+@media(max-width:430px) {
+  .flip-subheader { gap: 6px; }
+  .flip-page-count { font-size: 10px; }
+  .flip-zoom-controls > span { min-width: 35px; font-size: 11px; }
+  .flip-mode-button { gap: 4px; }
+}

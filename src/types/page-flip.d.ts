@@ -1,11 +1,10 @@
-
-declare module 'page-flip' {
-  type FlipCorner = 'top' | 'bottom';
+declare module "page-flip" {
+  type FlipCorner = "top" | "bottom";
 
   interface FlipSettings {
     width: number;
     height: number;
-    size?: 'fixed' | 'stretch';
+    size?: "fixed" | "stretch";
     minWidth?: number;
     maxWidth?: number;
     minHeight?: number;
@@ -21,14 +20,11 @@ declare module 'page-flip' {
   }
 
   export class PageFlip {
-    constructor(
-      element: HTMLElement,
-      settings: FlipSettings
-    );
+    constructor(element: HTMLElement, settings: FlipSettings);
 
     on(
-      event: 'flip',
-      callback: (event: { data: number | string }) => void
+      event: "flip",
+      callback: (event: { data: number | string }) => void,
     ): this;
 
     loadFromImages(images: string[]): void;

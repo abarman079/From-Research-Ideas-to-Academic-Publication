@@ -10,16 +10,20 @@ export function getSiteUrl(): string {
     configured ||
     (productionHost ? `https://${productionHost}` : undefined) ||
     (deploymentHost ? `https://${deploymentHost}` : undefined) ||
-    'http://localhost:3000';
+    "http://localhost:3000";
   try {
     const url = new URL(candidate);
-    if (url.protocol !== 'https:' && url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') {
-      throw new Error('Canonical base must use HTTPS');
+    if (
+      url.protocol !== "https:" &&
+      url.hostname !== "localhost" &&
+      url.hostname !== "127.0.0.1"
+    ) {
+      throw new Error("Canonical base must use HTTPS");
     }
     return url.origin;
   } catch {
     // Never make a production build fail merely because an optional URL is malformed.
-    return 'http://localhost:3000';
+    return "http://localhost:3000";
   }
 }
 
@@ -29,7 +33,7 @@ export function getSiteUrl(): string {
  * `noindex` is not access control; protect confidential deployments separately.
  */
 export function isIndexableDeployment(): boolean {
-  if (process.env.SITE_ALLOW_INDEXING !== 'true') return false;
-  if (process.env.VERCEL) return process.env.VERCEL_ENV === 'production';
-  return process.env.NODE_ENV === 'production';
+  if (process.env.SITE_ALLOW_INDEXING !== "true") return false;
+  if (process.env.VERCEL) return process.env.VERCEL_ENV === "production";
+  return process.env.NODE_ENV === "production";
 }

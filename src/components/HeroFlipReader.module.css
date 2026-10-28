@@ -1,0 +1,71 @@
+/* IOJH — two-page physical-book preview, with a curved 3D leaf turn. */
+.backdrop { position:fixed; inset:0; z-index:3000; display:grid; place-items:center; padding:14px; background:rgb(10 29 41 / 86%); color:#15364a; }
+.dialog { width:min(1160px,100%); height:min(92dvh,850px); min-height:0; display:flex; flex-direction:column; background:#fdfcf9; overflow:hidden; box-shadow:0 30px 85px rgb(0 0 0 / 38%); }
+.header { display:flex; align-items:center; justify-content:space-between; gap:16px; flex:0 0 auto; min-height:72px; padding:12px 23px; border-bottom:1px solid #e3e5e2; }
+.eyebrow { font:700 10px/1.45 Arial,sans-serif; letter-spacing:.14em; color:#5781af; text-transform:uppercase; }
+.header h2 { margin:3px 0 0; font-size:clamp(21px,2vw,28px); font-weight:650; line-height:1.2; }
+.close { width:40px; height:40px; display:grid; place-items:center; border:1px solid #d8dfde; background:transparent; color:#14364b; cursor:pointer; }
+.close:hover { background:#edf2ef; }
+.toolbar { flex:0 0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:8px 23px; min-height:52px; background:#f3f5f3; border-bottom:1px solid #e2e6e4; }
+.instructions { margin:0; color:#557080; font-size:12px; line-height:1.4; }
+.controls { display:flex; align-items:center; gap:18px; }
+.zoomControls { display:flex; align-items:center; background:#fff; border:1px solid #d4dfdd; }
+.zoomControls button { display:grid; place-items:center; width:33px; height:33px; padding:0; background:none; border:0; color:#1b4156; cursor:pointer; }
+.zoomControls button:hover:not(:disabled) { background:#eaf2ee; }
+.zoomControls button:disabled { opacity:.35; cursor:default; }
+.zoomControls output { width:47px; text-align:center; font:700 11px Arial,sans-serif; }
+.counter { min-width:94px; white-space:nowrap; text-align:right; color:#16394f; font:700 12px Arial,sans-serif; }
+.stage { flex:1 1 auto; position:relative; min-height:0; overflow:hidden; background:radial-gradient(ellipse at 50% 42%, #e9edeb, #dfe6e3); }
+.viewport { position:absolute; inset:0; overflow:auto; scrollbar-width:thin; overscroll-behavior:contain; }
+.canvas { position:relative; display:grid; place-items:center; min-width:100%; min-height:100%; }
+.book { position:relative; display:flex; flex-shrink:0; background:#fffdfa; box-shadow:0 10px 40px rgb(13 35 45 / 25%), 0 1px 2px rgb(0 0 0 / 12%); perspective:1800px; isolation:isolate; }
+.page { position:absolute; height:100%; width:50%; overflow:hidden; background:linear-gradient(90deg, #fffdfa, #fff); }
+.leftPage { left:0; box-shadow:inset -7px 0 10px -7px rgb(0 0 0 / 20%); }
+.rightPage { right:0; box-shadow:inset 8px 0 13px -8px rgb(0 0 0 / 22%); }
+.pageImage { display:block; width:100%; height:100%; object-fit:fill; user-select:none; -webkit-user-drag:none; }
+.blank { width:100%; height:100%; background:#fffdfa; }
+.missing { padding:15px; color:#9e3636; font-size:12px; background:#fffdfa; }
+.spine { position:absolute; top:0; bottom:0; left:50%; z-index:3; width:16px; transform:translateX(-50%); pointer-events:none; background:linear-gradient(90deg, transparent, rgb(0 0 0 / 14%) 42%, rgb(255 255 255 / 12%) 58%, transparent); }
+/* Stable turning sheet: its dimensions never skew, squash, or change during animation.
+   Only the outer leaf rotates. A moving gradient simulates curvature without
+   distorting Bengali text or causing the layout to jump between frames. */
+.flippingLeaf { position:absolute; top:0; width:50%; height:100%; z-index:5; transform-style:preserve-3d; pointer-events:none; will-change:transform; }
+.forward { left:50%; transform-origin:left center; animation:turnForward 920ms cubic-bezier(.40,0,.17,1) both; }
+.backward { left:0; transform-origin:right center; animation:turnBackward 920ms cubic-bezier(.40,0,.17,1) both; }
+.leafFlex { position:relative; width:100%; height:100%; transform-style:preserve-3d; }
+.leafFace { position:absolute; inset:0; overflow:hidden; background:#fffdfa; backface-visibility:hidden; -webkit-backface-visibility:hidden; box-shadow:inset 0 0 5px rgb(0 0 0 / 8%); }
+.leafFront { transform:rotateY(0deg) translateZ(0.15px); border-radius:0 4px 4px 0; }
+.leafBack { transform:rotateY(180deg) translateZ(0.15px); border-radius:4px 0 0 4px; }
+.leafFace::after { content:''; position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg, rgb(0 0 0 / 22%), transparent 22%, transparent 78%, rgb(0 0 0 / 9%)); animation:shadowWave 920ms ease-in-out both; }
+.leafBack::after { background:linear-gradient(90deg, rgb(0 0 0 / 8%), transparent 30%, transparent 75%, rgb(0 0 0 / 21%)); }
+/* A moving highlight makes the edge appear slightly curled. It affects light only, not geometry. */
+.shine { position:absolute; inset:0; pointer-events:none; background:linear-gradient(102deg, transparent 18%, rgb(255 255 255 / 0%) 36%, rgb(255 255 255 / 42%) 50%, transparent 65%); background-size:260% 100%; animation:glint 920ms ease-in-out both; }
+@keyframes turnForward { from {transform:translateZ(1px) rotateY(0deg);} to {transform:translateZ(1px) rotateY(-180deg);} }
+@keyframes turnBackward { from {transform:translateZ(1px) rotateY(0deg);} to {transform:translateZ(1px) rotateY(180deg);} }
+@keyframes shadowWave {0%,100% {opacity:.15;} 48% {opacity:.78;} 75% {opacity:.5;} }
+@keyframes glint {0% {background-position:0% 0;} 100% {background-position:100% 0;} }
+.singleBook .page { width:100%; }
+.singlePage { left:0; }
+.singleBook .spine { display:none; }
+.fullLeaf {width:100%;left:0;}
+.fullLeaf.forward {transform-origin:left center;}
+.fullLeaf.backward {transform-origin:right center;}
+.arrow { position:absolute; z-index:10; top:50%; transform:translateY(-50%); display:grid; place-items:center; width:42px; height:56px; padding:0; color:#163b52; background:rgb(255 255 255 / 96%); border:1px solid #d7dfdc; box-shadow:0 2px 10px rgb(5 25 30 / 12%); cursor:pointer; }
+.arrow:hover:not(:disabled) {background:#fff; border-color:#8ba5b4;}
+.arrow:disabled {opacity:.25;cursor:default;}
+.prev {left:9px;}.next {right:9px;}
+.footer {flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:77px;padding:7px 18px;background:#fffefa;border-top:1px solid #dfe6e2;}
+.thumbnails {display:flex;align-items:center;flex:1 1 auto;gap:5px;overflow-x:auto;min-width:0;padding:4px;scrollbar-width:thin;}
+.thumbnail {display:flex;align-items:center;flex:0 0 43px;flex-direction:column;gap:2px;border:1px solid transparent;padding:3px 2px;background:none;color:#657d8e;cursor:pointer;}
+.thumbnail img {width:34px;height:43px;display:block;object-fit:contain;background:#fff;border:1px solid #dde4e1;}
+.thumbnail span {font:700 10px/1.2 Arial,sans-serif;}
+.thumbnail:hover:not(:disabled) {background:#ecf1ef;}
+.thumbnail.active {background:#edf4fb;border-color:#5a86bf;color:#154e8a;}
+.thumbnail:disabled {opacity:.6;cursor:default;}
+.buy {display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;gap:7px;min-height:39px;padding:9px 13px;border:0;background:#15394f;color:#fff;text-decoration:none;font:700 12px Arial,sans-serif;white-space:nowrap;cursor:pointer;}
+.buy:hover {background:#25556f;}
+.dialog :is(button,a):focus-visible {outline:3px solid #568ac1;outline-offset:2px;}
+@media (max-width:740px) {
+ .backdrop {padding:0;} .dialog {width:100%;height:100dvh;} .header {padding:9px 13px;min-height:60px;} .header h2 {font-size:21px;} .close {width:36px;height:36px;} .toolbar {flex-wrap:wrap;gap:6px;min-height:76px;padding:7px 12px;} .instructions {flex:1 1 100%;font-size:11px;} .controls {width:100%;justify-content:space-between;gap:8px;} .stage {min-height:0;} .footer {gap:6px;min-height:75px;padding:5px 8px;} .arrow {width:29px;height:46px;} .prev {left:2px;}.next {right:2px;} .thumbnail {flex-basis:37px;} .thumbnail img {width:30px;height:39px;} .buy {padding:8px 9px;font-size:11px;} .counter {font-size:11px;} }
+@media (max-width:390px) { .footer {flex-direction:column;align-items:stretch;min-height:108px;} .buy {align-self:flex-end;min-height:28px;} .header h2 {font-size:19px;} }
+@media (prefers-reduced-motion:reduce) { .dialog *, .dialog *::before, .dialog *::after {animation-duration:.01ms !important;transition-duration:.01ms !important;} }

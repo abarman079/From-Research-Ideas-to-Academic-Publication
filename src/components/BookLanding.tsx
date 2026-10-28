@@ -20,19 +20,8 @@ import { book, gallery, previewPages, PREVIEW_PDF_URL } from "@/lib/book";
 import HeroFlipReader from "@/components/HeroFlipReader";
 import ReaderReviews from "@/components/ReaderReviews";
 import AuthorAndPurchase from "@/components/AuthorAndPurchase";
+import BookTopicsExplorer from "@/components/BookTopicsExplorer";
 import { reviews } from "@/lib/reviews";
-
-type TopicFilter = "all" | "foundations" | "practice" | "publishing";
-const TOPIC_GROUPS = [
-  "foundations",
-  "foundations",
-  "practice",
-  "practice",
-  "practice",
-  "publishing",
-  "publishing",
-  "publishing",
-] as const;
 
 type PhotoProps = {
   src: string;
@@ -89,7 +78,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [readerOpen, setReaderOpen] = useState(false);
-  const [topicFilter, setTopicFilter] = useState<TopicFilter>("all");
+
   const lastTrigger = useRef<HTMLElement | null>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   const galleryTouchX = useRef<number | null>(null);
@@ -225,14 +214,6 @@ export default function BookLanding({ locale }: { locale: Locale }) {
       : `Read ${PREVIEW_PDF_URL ? 15 : previewPages.length} Pages`;
   const hasApprovedReviews = reviews.some((item) => item.approved);
   const currentImage = gallery[photoIndex];
-  const visibleTopics = t.contents.topics
-    .map((title, index) => ({
-      title,
-      detail: t.contents.topicDetails[index],
-      index,
-      group: TOPIC_GROUPS[index],
-    }))
-    .filter((item) => topicFilter === "all" || item.group === topicFilter);
   // Keep a returning visitor's language preference, including visits to the root URL.
   useEffect(() => {
     document.cookie = `iojh-book-locale=${locale}; path=/; max-age=31536000; SameSite=Lax`;
@@ -509,74 +490,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
           </div>
         </section>
 
-        <section
-          id="inside"
-          className="section contents-section"
-          aria-labelledby="contents-heading"
-        >
-          <div className="container">
-            <div className="section-heading reveal">
-              <h2 id="contents-heading">
-                {t.contents.title} <em>{t.contents.accent}</em>
-              </h2>
-              <p>{t.contents.intro}</p>
-            </div>
-            <div className="contents-explorer-header reveal">
-              <p className="contents-editorial-note">
-                {locale === "bn"
-                  ? "বইটি তিনটি মূল বিষয়ে সাজানো: গবেষণা পদ্ধতি, পাণ্ডুলিপি প্রস্তুতি ও প্রকাশনা। নিচে কয়েকটি আলোচ্য বিষয় দেওয়া হলো।"
-                  : "The book covers research methods, manuscript preparation and publication. Here are a few of the topics included."}
-              </p>
-              <div className="contents-explorer-controls">
-                <span className="micro-label">{t.contents.filterTitle}</span>
-                <div
-                  className="contents-filters"
-                  role="group"
-                  aria-label={t.contents.filterTitle}
-                >
-                  {t.contents.filters.map((option) => (
-                    <button
-                      type="button"
-                      key={option.key}
-                      className={topicFilter === option.key ? "is-active" : ""}
-                      aria-pressed={topicFilter === option.key}
-                      onClick={() => setTopicFilter(option.key)}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <p className="sr-only" aria-live="polite">
-              {visibleTopics.length} {t.contents.countLabel}
-            </p>
-            <div
-              className={`theme-grid${topicFilter !== "all" ? " is-filtered" : ""}`}
-              key={`${locale}-${topicFilter}`}
-            >
-              {visibleTopics.map((item) => (
-                <article
-                  className={`theme-card theme-card--${item.group}${[0, 5, 6, 7].includes(item.index) ? " theme-featured" : ""}`}
-                  key={item.index}
-                >
-                  <div className="theme-card-top">
-                    <span className="theme-card-index">
-                      {String(item.index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="theme-card-category">
-                      {t.contents.groupLabels[item.group]}
-                    </span>
-                  </div>
-                  <div className="theme-card-body">
-                    <h3>{item.title}</h3>
-                    <p>{item.detail}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
+        <BookTopicsExplorer locale={locale} />
 
         {hasApprovedReviews && <ReaderReviews locale={locale} />}
 

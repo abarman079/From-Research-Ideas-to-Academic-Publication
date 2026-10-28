@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local copies made by the IOJH topic-section installer
+/.iojh-backups/

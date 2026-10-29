@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { title, description } = getCopy(locale).metadata;
   const siteUrl = getSiteUrl();
   const pageUrl = `${siteUrl}/${locale}`;
-  const imageUrl = `${siteUrl}${gallery[0].src}`;
+  const imageUrl = `${siteUrl}/opengraph-image.jpg`;
   return {
     metadataBase: new URL(siteUrl),
     title,
@@ -72,7 +72,6 @@ export default async function LocalizedBookPage({ params }: Props) {
     isbn: book.isbn,
     author: { "@type": "Person", name: book.authorEnglish },
     inLanguage: "bn",
-    numberOfPages: book.pageCount,
     image: `${siteUrl}${gallery[0].src}`,
     url: `${siteUrl}/${locale}`,
     description,

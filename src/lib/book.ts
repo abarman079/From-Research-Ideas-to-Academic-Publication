@@ -4,7 +4,6 @@ export const book = {
   englishTitle: 'Research Method, Manuscript Preparation and Publication',
   author: 'কারিউল ইসলাম',
   authorEnglish: 'Kariul Islam',
-  pageCount: 504,
   isbn: '978-984-37-0566-2',
   productUrl: 'https://iojh.com.bd/product/research-methods-manuscript-preparation-and-publication/',
 } as const;

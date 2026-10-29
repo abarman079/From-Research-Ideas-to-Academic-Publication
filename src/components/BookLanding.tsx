@@ -24,6 +24,8 @@ import ReaderReviews from "@/components/ReaderReviews";
 import AuthorAndPurchase from "@/components/AuthorAndPurchase";
 import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
 import BookTopicsExplorer from "@/components/BookTopicsExplorer";
+import BookFAQ from '@/components/BookFAQ';
+import SiteActivity from '@/components/SiteActivity';
 import { reviews } from "@/lib/reviews";
 
 type PhotoProps = {
@@ -172,6 +174,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   }, [lightboxOpen]);
 
   const openReader = (trigger?: HTMLElement) => {
+    window.dispatchEvent(new Event('iojh:sample-open'));
     lastTrigger.current = trigger ?? null;
     setNavOpen(false);
     setReaderOpen(true);
@@ -234,6 +237,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   return (
     <div ref={root} className="site-wrap">
       <SmoothPageScroll paused={readerOpen || lightboxOpen} />
+      <SiteActivity locale={locale} />
       <a className="skip-link" href="#main-content">
         {t.general.skip}
       </a>
@@ -419,24 +423,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
 
         <AuthorAndPurchase locale={locale} />
 
-        <section id="faq" className="section faq-section">
-          <div className="container faq-grid">
-            <div className="reveal">
-              <h2>
-                {t.faq.title} <em>{t.faq.accent}</em>
-              </h2>
-              <p>{t.faq.intro}</p>
-            </div>
-            <div className="faq-list reveal">
-              {t.faq.items.map((item, index) => (
-                <details key={index}>
-                  <summary>{item.question}</summary>
-                  <p>{item.answer}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
+        <BookFAQ locale={locale} />
       </main>
 
       <SiteFooter locale={locale} hasReviews={hasApprovedReviews} onPreview={(trigger) => openReader(trigger)} />

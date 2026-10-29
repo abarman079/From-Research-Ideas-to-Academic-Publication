@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Local copies made by the IOJH topic-section installer
 /.iojh-backups/
+
+# Local restoration copies (do not commit)
+.iojh-backups/

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Analytics } from '@vercel/analytics/next';
 import { notFound } from 'next/navigation';
 import { isLocale } from '@/i18n/copy';
 import '../../globals.css';
@@ -11,7 +12,7 @@ export default async function LocalizedRootLayout({ children, params }: Props) {
   if (!isLocale(locale)) notFound();
   return (
     <html lang={locale === 'bn' ? 'bn-BD' : 'en'} suppressHydrationWarning>
-      <body>{children}</body>
+      <body>{children}<Analytics /></body>
     </html>
   );
 }

@@ -19,8 +19,10 @@ import { book, gallery, previewPages, PREVIEW_PDF_URL } from "@/lib/book";
 import HeroFlipReader from "@/components/HeroFlipReader";
 import CampaignHero from "@/components/CampaignHero";
 import SmoothPageScroll from '@/components/SmoothPageScroll';
+import EditorialMotion from "@/components/EditorialMotion";
 import '@/app/hero-smooth-scroll.css';
 import "@/app/campaign-type.css";
+import "@/app/editorial-motion.css";
 import ReaderReviews from "@/components/ReaderReviews";
 import AuthorAndPurchase from "@/components/AuthorAndPurchase";
 import { SiteFooter } from "@/components/SiteChrome";
@@ -238,6 +240,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
   return (
     <div ref={root} className="site-wrap">
       <SmoothPageScroll paused={readerOpen || lightboxOpen} />
+      <EditorialMotion locale={locale} />
       <SiteActivity locale={locale} />
       <a className="skip-link" href="#main-content">
         {t.general.skip}

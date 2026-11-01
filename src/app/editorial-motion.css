@@ -1,0 +1,31 @@
+/* IOJH Premium V3 / Phase 2.5 — interaction polish, no theme/layout changes. */
+#inside button[aria-haspopup='dialog'] {
+  transform-origin: 50% 75%;
+  backface-visibility: hidden;
+}
+#inside button[aria-haspopup='dialog']:focus-visible,
+#purchase a:focus-visible,
+#reviews button:focus-visible,
+#faq summary:focus-visible {
+  outline-offset: 5px;
+}
+#purchase a[target='_blank'] svg,
+#inside aside a svg,
+#reviews a[href='#purchase'] svg {
+  transition: transform .33s cubic-bezier(.22,1,.36,1);
+}
+@media (hover:hover) and (prefers-reduced-motion:no-preference) {
+  #purchase a[target='_blank']:hover svg,
+  #inside aside a:hover svg,
+  #reviews a[href='#purchase']:hover svg {
+    transform: translate(3px,-2px);
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  #purchase a[target='_blank'] svg,
+  #inside aside a svg,
+  #reviews a[href='#purchase'] svg {
+    transition:none!important;
+    transform:none!important;
+  }
+}

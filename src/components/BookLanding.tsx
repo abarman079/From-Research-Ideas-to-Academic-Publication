@@ -30,7 +30,6 @@ import PurchaseIntentEvents from "@/components/PurchaseIntentEvents";
 import BookTopicsExplorer from "@/components/BookTopicsExplorer";
 import BookFAQ from '@/components/BookFAQ';
 import SiteActivity from '@/components/SiteActivity';
-import { reviews } from "@/lib/reviews";
 
 type PhotoProps = {
   src: string;
@@ -213,7 +212,6 @@ export default function BookLanding({ locale }: { locale: Locale }) {
     locale === "bn"
       ? `${String(PREVIEW_PDF_URL ? 15 : previewPages.length).replace(/[0-9]/g, (digit) => "০১২৩৪৫৬৭৮৯"[Number(digit)])} পৃষ্ঠা পড়ুন`
       : `Read ${PREVIEW_PDF_URL ? 15 : previewPages.length} Pages`;
-  const hasApprovedReviews = reviews.some((item) => item.approved);
   const currentImage = gallery[photoIndex];
   // Keep a returning visitor's language preference, including visits to the root URL.
   useEffect(() => {
@@ -260,14 +258,14 @@ export default function BookLanding({ locale }: { locale: Locale }) {
 
         <BookTopicsExplorer locale={locale} onPreview={(trigger) => openReader(trigger)} />
 
-        {hasApprovedReviews && <ReaderReviews locale={locale} />}
+        <ReaderReviews locale={locale} onPreview={(trigger) => openReader(trigger)} />
 
         <AuthorAndPurchase locale={locale} />
 
         <BookFAQ locale={locale} />
       </main>
 
-            <SignatureFinale locale={locale} hasReviews={hasApprovedReviews} onPreview={(trigger) => openReader(trigger)} />
+            <SignatureFinale locale={locale} hasReviews={true} onPreview={(trigger) => openReader(trigger)} />
 
       {lightboxOpen && (
         <div

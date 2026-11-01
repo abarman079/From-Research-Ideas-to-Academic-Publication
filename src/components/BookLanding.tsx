@@ -253,7 +253,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
           onLocaleChange={switchLocale}
         />
 
-        <BookTopicsExplorer locale={locale} />
+        <BookTopicsExplorer locale={locale} onPreview={(trigger) => openReader(trigger)} />
 
         {hasApprovedReviews && <ReaderReviews locale={locale} />}
 

@@ -1,181 +1,83 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState } from "react";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import type { Locale } from "@/i18n/copy";
-import { getCopy } from "@/i18n/copy";
-import { reviews } from "@/lib/reviews";
+import Image from 'next/image';
+import { useState } from 'react';
+import { ArrowUpRight, ChevronLeft, ChevronRight, Star } from 'lucide-react';
+import type { Locale } from '@/i18n/copy';
+import { getCopy } from '@/i18n/copy';
+import { reviews } from '@/lib/reviews';
+import styles from './ReaderReviews.module.css';
 
-function Portrait({ path, name }: { path: string | null; name: string }) {
-  const [imageError, setImageError] = useState(false);
-
-  const initials = name
-    .split(/[.\s]+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part.charAt(0))
-    .join("")
-    .toUpperCase();
-
+function ReviewerPortrait({ path, name }: { path: string | null; name: string }) {
+  const [broken, setBroken] = useState(false);
   return (
-    <div className="testimonial-avatar" aria-label={name}>
-      {path && !imageError ? (
-        <Image
-          src={path}
-          alt={name}
-          fill
-          sizes="(max-width: 640px) 96px, 140px"
-          onError={() => setImageError(true)}
-        />
+    <div className={styles.portrait}>
+      {path && !broken ? (
+        <Image src={path} alt={name} fill sizes="(max-width: 650px) 102px, 170px" className={styles.portraitPhoto} onError={() => setBroken(true)} />
       ) : (
-        <span aria-hidden="true">{initials}</span>
+        <span className={styles.initials} aria-hidden="true">{name.split(/\s+/).map(x => x[0]).slice(0,2).join('')}</span>
       )}
     </div>
   );
 }
 
-function Stars({ rating, label }: { rating: number; label: string }) {
+function Rating({ rating, locale }: { rating: number; locale: Locale }) {
   return (
-    <div className="testimonial-rating" role="img" aria-label={label}>
-      {Array.from({ length: 5 }, (_, index) => {
-        const fill = Math.max(0, Math.min(1, rating - index));
-
-        return (
-          <span className="testimonial-star" key={index} aria-hidden="true">
-            <Star
-              size={20}
-              strokeWidth={1.5}
-              className="testimonial-star-outline"
-            />
-            <span
-              className="testimonial-star-filled"
-              style={{ width: `${fill * 100}%` }}
-            >
-              <Star size={20} strokeWidth={1.5} fill="currentColor" />
-            </span>
-          </span>
-        );
-      })}
-
-      <span className="testimonial-score" aria-hidden="true">
-        {rating.toFixed(1)}/5
-      </span>
+    <div className={styles.rating} role="img" aria-label={locale === 'bn' ? `৫-এর মধ্যে ${rating.toLocaleString('bn-BD')} তারকা` : `${rating} out of 5 stars`}>
+      {Array.from({ length: 5 }, (_, i) => (
+        <span className={styles.star} key={i} aria-hidden="true">
+          <Star size={19} strokeWidth={1.7} />
+          <span style={{ width: `${Math.max(0, Math.min(1, rating - i)) * 100}%` }}><Star size={19} fill="currentColor" strokeWidth={1.7}/></span>
+        </span>
+      ))}
+      <strong>{locale === 'bn' ? rating.toLocaleString('bn-BD', { minimumFractionDigits: 1 }) : rating.toFixed(1)} / 5</strong>
     </div>
   );
 }
 
 export default function ReaderReviews({ locale }: { locale: Locale }) {
+  // IMPORTANT: sample reviews must never be published as genuine endorsements.
+  const verified = reviews.filter(review => review.approved);
+  const [active, setActive] = useState(0);
   const t = getCopy(locale).reviews;
-
-  const [index, setIndex] = useState(0);
-
-  // Display only verified and approved reviews.
-  const approvedReviews = reviews.filter((item) => item.approved);
-
-  // Nothing is displayed until reviews are approved.
-  if (approvedReviews.length === 0) {
-    return null;
-  }
-
-  const safeIndex = index % approvedReviews.length;
-  const review = approvedReviews[safeIndex];
-
-  const move = (by: number) => {
-    setIndex(
-      (current) =>
-        (current + by + approvedReviews.length) % approvedReviews.length,
-    );
-  };
-
+  const isBn = locale === 'bn';
+  if (verified.length === 0) return null;
+  const index = active % verified.length;
+  const review = verified[index];
+  const move = (delta: number) => setActive(current => (current + delta + verified.length) % verified.length);
   return (
-    <section
-      className="testimonials-section section"
-      id="reviews"
-      aria-labelledby="reviews-heading"
-    >
-      <div className="container">
-        <div className="testimonials-intro">
+    <section className={styles.section} id="reviews" aria-labelledby="reader-voices-title">
+      <div className={styles.inner}>
+        <div className={styles.heading}>
           <div>
-            <span className="kicker">{t.eyebrow}</span>
-
-            <h2 id="reviews-heading">{t.title}</h2>
+            <span className={styles.kicker}>{isBn ? 'পাঠকের মতামত / অনুমোদিত অভিমত' : 'READER VOICES / VERIFIED TESTIMONIALS'}</span>
+            <h2 id="reader-voices-title">{isBn ? 'পাঠকের' : 'Words from'} <em>{isBn ? 'কথায়' : 'our readers.'}</em></h2>
           </div>
-
           <p>{t.intro}</p>
         </div>
-
-        <div
-          className="testimonial-stage"
-          aria-roledescription="carousel"
-          aria-label={t.carouselLabel}
-        >
-          <div className="testimonial-portrait-wrap">
-            <Portrait key={review.id} path={review.photo} name={review.name} />
-          </div>
-
-          <figure
-            className="testimonial-quote-card"
-            key={`${locale}-${review.id}`}
-          >
-            <blockquote className="testimonial-quote" lang={locale}>
-              {review.quote[locale]}
-            </blockquote>
-
-            <figcaption className="testimonial-caption">
-              <span className="testimonial-author">— {review.name}</span>
-
-              <Stars
-                rating={review.rating}
-                label={
-                  locale === "bn"
-                    ? `৫-এর মধ্যে ${review.rating.toLocaleString("bn-BD")} তারকা`
-                    : `${review.rating} out of 5 stars`
-                }
-              />
+        <div className={styles.story}>
+          <div className={styles.portraitWrap}><ReviewerPortrait key={review.id} path={review.photo} name={review.name} /><span className={styles.count}>0{index + 1} / 0{verified.length}</span></div>
+          <figure className={styles.quote} key={`${locale}-${review.id}`}>
+            <span className={styles.quoteGlyph} aria-hidden="true">“</span>
+            <blockquote lang={locale}>{review.quote[locale]}</blockquote>
+            <figcaption>
+              <div className={styles.person}><span className={styles.name}>{review.name}</span><span className={styles.readerLabel}>{isBn ? 'অনুমোদিত পাঠক-মতামত' : 'Approved reader review'}</span></div>
+              <Rating rating={review.rating} locale={locale}/>
             </figcaption>
           </figure>
         </div>
-
-        <div className="testimonials-controls">
-          <div
-            className="testimonials-pagination"
-            role="group"
-            aria-label={t.selectReview}
-          >
-            {approvedReviews.map((item, position) => (
-              <button
-                key={item.id}
-                type="button"
-                className={safeIndex === position ? "is-active" : ""}
-                aria-label={`${t.reviewNumber} ${position + 1}: ${item.name}`}
-                aria-pressed={safeIndex === position}
-                onClick={() => setIndex(position)}
-              >
-                <span />
-              </button>
-            ))}
+        <div className={styles.controls}>
+          <div className={styles.dots} role="group" aria-label={t.selectReview}>
+            {verified.map((item,i)=><button key={item.id} type="button" onClick={()=>setActive(i)} className={i===index?styles.dotActive:styles.dot} aria-label={`${t.reviewNumber} ${i+1}: ${item.name}`} aria-pressed={i===index}/>) }
           </div>
-
-          <div className="testimonials-arrows">
-            <span className="testimonial-position" aria-live="polite">
-              {String(safeIndex + 1).padStart(2, "0")}
-              {" / "}
-              {String(approvedReviews.length).padStart(2, "0")}
-            </span>
-
-            <button
-              type="button"
-              aria-label={t.previous}
-              onClick={() => move(-1)}
-            >
-              <ChevronLeft size={18} aria-hidden="true" />
-            </button>
-
-            <button type="button" aria-label={t.next} onClick={() => move(1)}>
-              <ChevronRight size={18} aria-hidden="true" />
-            </button>
+          <div className={styles.arrows}>
+            <button type="button" onClick={()=>move(-1)} aria-label={t.previous}><ChevronLeft size={20}/></button>
+            <button type="button" onClick={()=>move(1)} aria-label={t.next}><ChevronRight size={20}/></button>
           </div>
+        </div>
+        <div className={styles.endNote}>
+          <span>{isBn ? 'আপনার গবেষণার জন্য একটি বাংলা সহায়ক গ্রন্থ' : 'A Bengali reference for your research journey'}</span>
+          <a href="#purchase">{isBn ? 'আপনার কপিটি অর্ডার করুন' : 'Order your printed copy'}<ArrowUpRight size={19} aria-hidden="true" /></a>
         </div>
       </div>
     </section>

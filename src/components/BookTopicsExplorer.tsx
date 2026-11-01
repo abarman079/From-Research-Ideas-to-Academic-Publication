@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ChevronLeft, ChevronRight, X, BookOpen, ShoppingBag } from 'lucide-react';
 import { getCopy, type Locale } from '@/i18n/copy';
 import { bookTopics, type BookTopic, type TopicGroup } from '@/lib/bookTopics';
 import styles from './BookTopicsExplorer.module.css';
@@ -19,7 +19,7 @@ function number(value: number, locale: Locale) {
   return locale === 'bn' ? raw.replace(/\d/g, digit => '০১২৩৪৫৬৭৮৯'[Number(digit)]) : raw;
 }
 
-export default function BookTopicsExplorer({ locale }: { locale: Locale }) {
+export default function BookTopicsExplorer({ locale, onPreview }: { locale: Locale; onPreview?: (trigger: HTMLElement) => void }) {
   const t = getCopy(locale);
   const isBn = locale === 'bn';
   const [filter, setFilter] = useState<Filter>('all');
@@ -43,6 +43,11 @@ export default function BookTopicsExplorer({ locale }: { locale: Locale }) {
         prev: 'আগের বিষয়',
         dialogTitle: 'বিষয়ের বিস্তারিত',
         count: 'টি বিষয়',
+        preheading: 'বইয়ের ভেতরে / অধ্যায়সমূহ',
+        ctaTitle: 'আপনার গবেষণার পরবর্তী ধাপটি এখান থেকেই শুরু হতে পারে।',
+        ctaText: 'বইয়ের আলোচ্য বিষয়গুলো দেখলেন। এবার মূল বইয়ের ১৫টি পৃষ্ঠা নিজেই পড়ে দেখুন।',
+        ctaPreview: '১৫ পৃষ্ঠা পড়ে দেখুন',
+        ctaPurchase: 'বইটি অর্ডার করুন',
       }
     : {
         intro: 'Explore selected subjects from the book’s three chapters on research methods, manuscript preparation and publication.',
@@ -56,6 +61,11 @@ export default function BookTopicsExplorer({ locale }: { locale: Locale }) {
         prev: 'Previous topic',
         dialogTitle: 'Topic details',
         count: 'topics',
+        preheading: 'INSIDE THE BOOK / THREE CHAPTERS',
+        ctaTitle: 'The next chapter of your research begins here.',
+        ctaText: 'You have seen the subjects. Now explore 15 original pages before choosing your printed copy.',
+        ctaPreview: 'Read 15 pages',
+        ctaPurchase: 'Order the book',
       };
 
   useEffect(() => {
@@ -108,12 +118,13 @@ export default function BookTopicsExplorer({ locale }: { locale: Locale }) {
 
   return (
     <section id="inside" className={`section contents-section ${styles.section}`} aria-labelledby="contents-heading">
-      <div className="container">
+      <div className={styles.inner}>
         <div className={styles.heading}>
           <div>
+            <span className={styles.kicker}>{labels.preheading}</span>
             <h2 id="contents-heading">{t.contents.title} <em>{t.contents.accent}</em></h2>
-            <p className={styles.intro}>{labels.intro}</p>
           </div>
+          <p className={styles.intro}>{labels.intro}</p>
         </div>
 
         <div className={styles.toolbar}>
@@ -139,9 +150,9 @@ export default function BookTopicsExplorer({ locale }: { locale: Locale }) {
             const index = bookTopics.indexOf(topic);
             const content = topic[locale];
             const style: PaletteStyle = {
-              '--topic-bg': topic.palette.background,
-              '--topic-ink': topic.palette.ink,
-              '--topic-accent': topic.palette.accent,
+              '--topic-bg': ['#E6C66F', '#F2A7B0', '#B5DAD0', '#D4C3EF', '#9CAFD3', '#F1B58E', '#C7C3A6', '#A5CBE7'][index],
+              '--topic-ink': '#241A26',
+              '--topic-accent': '#7E2355',
             };
             return (
               <button
@@ -177,6 +188,17 @@ export default function BookTopicsExplorer({ locale }: { locale: Locale }) {
             );
           })}
         </div>
+        <aside className={styles.afterGrid} aria-label={labels.ctaTitle}>
+          <div className={styles.afterCopy}>
+            <span className={styles.afterIndex}>IOJH / BOOK PREVIEW</span>
+            <h3>{labels.ctaTitle}</h3>
+            <p>{labels.ctaText}</p>
+          </div>
+          <div className={styles.afterActions}>
+            <button type="button" className={styles.previewLink} onClick={(e) => onPreview?.(e.currentTarget)} disabled={!onPreview}><BookOpen size={18} aria-hidden="true" />{labels.ctaPreview}</button>
+            <a className={styles.purchaseLink} href="#purchase"><ShoppingBag size={18} aria-hidden="true" />{labels.ctaPurchase}<ArrowUpRight size={17} aria-hidden="true" /></a>
+          </div>
+        </aside>
       </div>
 
       {selectedTopic && (

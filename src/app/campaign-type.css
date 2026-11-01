@@ -1,0 +1,15 @@
+/* IOJH V3: typography and palette foundation. Remaining sections retain their current styles until phases 2–3. */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Hind+Siliguri:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;500;600;700&display=swap');
+:root {
+  --iojh-v3-ink: #19151c;
+  --iojh-v3-paper: #f8f5ef;
+  --iojh-v3-cerise: #e83f64;
+  --iojh-v3-magenta: #921379;
+  --iojh-v3-cobalt: #245ac7;
+  --iojh-v3-gold: #e5b348;
+  --iojh-v3-display-en: 'Bodoni Moda', 'Didot', 'Times New Roman', serif;
+  --iojh-v3-display-bn: 'Noto Serif Bengali', 'Lohit Bengali', serif;
+  --iojh-v3-condensed: 'Barlow Condensed', Impact, sans-serif;
+  --iojh-v3-sans-en: 'Manrope', Arial, sans-serif;
+  --iojh-v3-sans-bn: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif;
+}

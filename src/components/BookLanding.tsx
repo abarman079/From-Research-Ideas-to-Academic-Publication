@@ -17,12 +17,13 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { book, gallery, previewPages, PREVIEW_PDF_URL } from "@/lib/book";
 import HeroFlipReader from "@/components/HeroFlipReader";
-import heroStyles from '@/components/EditorialHero.module.css';
+import CampaignHero from "@/components/CampaignHero";
 import SmoothPageScroll from '@/components/SmoothPageScroll';
 import '@/app/hero-smooth-scroll.css';
+import "@/app/campaign-type.css";
 import ReaderReviews from "@/components/ReaderReviews";
 import AuthorAndPurchase from "@/components/AuthorAndPurchase";
-import { SiteHeader, SiteFooter } from "@/components/SiteChrome";
+import { SiteFooter } from "@/components/SiteChrome";
 import BookTopicsExplorer from "@/components/BookTopicsExplorer";
 import BookFAQ from '@/components/BookFAQ';
 import SiteActivity from '@/components/SiteActivity';
@@ -241,181 +242,16 @@ export default function BookLanding({ locale }: { locale: Locale }) {
       <a className="skip-link" href="#main-content">
         {t.general.skip}
       </a>
-      <SiteHeader
-        locale={locale}
-        hasReviews={hasApprovedReviews}
-        navOpen={navOpen}
-        onNavOpenChange={setNavOpen}
-        menuButtonRef={mobileMenuButton}
-        onPreview={(trigger) => openReader(trigger)}
-        onLocaleChange={switchLocale}
-      />
-
       <main id="main-content">
-        <section id="top" className={`hero-section ${heroStyles.editorialHero}`}>
-          <div className="container hero-grid">
-            <div className="hero-copy">
-              <div className="eyebrow hero-enter">
-                <span className="eyebrow-rule" /> {t.hero.eyebrow}{" "}
-                <span className="eyebrow-index">— 01</span>
-              </div>
-              <p className="hero-pretitle hero-enter">{t.hero.pretitle}</p>
-              <h1 className="hero-title hero-enter">
-                {t.hero.title} <span>{t.hero.accent}</span>
-              </h1>
-              <p className="hero-book-name hero-enter">
-                {locale === "bn" ? book.title : book.englishTitle}
-              </p>
-              <p className="hero-description hero-enter">
-                {t.hero.description}
-              </p>
-              <div className="hero-buttons hero-enter">
-                <a className="btn btn-dark" href="#purchase">
-                  {t.hero.order} <ArrowUpRight size={18} aria-hidden="true" />
-                </a>
-                <button
-                  className="btn btn-light"
-                  type="button"
-                  onClick={(e) => openReader(e.currentTarget)}
-                >
-                  <BookOpen size={18} aria-hidden="true" /> {sampleButtonText}
-                </button>
-              </div>
-              
-              <ul className={heroStyles.chapterLine} aria-label={locale === 'bn' ? 'বইয়ের তিনটি প্রধান বিষয়' : 'Three core subjects in the book'}>
-                <li><a href="#inside"><span aria-hidden="true" />{locale === 'bn' ? 'গবেষণা পদ্ধতি' : 'Research methods'}</a></li>
-                <li><a href="#inside"><span aria-hidden="true" />{locale === 'bn' ? 'পাণ্ডুলিপি প্রস্তুতি' : 'Manuscript preparation'}</a></li>
-                <li><a href="#inside"><span aria-hidden="true" />{locale === 'bn' ? 'একাডেমিক প্রকাশনা' : 'Academic publication'}</a></li>
-              </ul>
-              <div className="hero-facts hero-enter"
-                aria-label={t.hero.edition}
-              >
-                <div>
-                  <strong>{t.hero.languageValue}</strong>
-                  <span>{t.hero.languageLabel}</span>
-                </div>
-                <div>
-                  <strong>{t.hero.formatValue}</strong>
-                  <span>{t.hero.formatLabel}</span>
-                </div>
-              </div>
-            </div>
-            <div
-              className="hero-product hero-enter"
-              id="about"
-              aria-label={t.gallery.stage}
-            >
-              <div className="hero-showcase">
-                <div className="hero-showcase-heading">
-                  <div>
-                    <span className="hero-showcase-eyebrow">
-                      {t.gallery.stage}
-                    </span>
-                    <p>{t.gallery.mediaIntro}</p>
-                  </div>
-                  <span className="hero-showcase-index" aria-live="polite">
-                    {String(photoIndex + 1).padStart(2, "0")}{" "}
-                    <span>/ {String(gallery.length).padStart(2, "0")}</span>
-                  </span>
-                </div>
-
-                <div className="hero-gallery-media">
-                  <button
-                    key={currentImage.src}
-                    type="button"
-                    className="hero-gallery-main image-swap"
-                    onClick={(event) => {
-                      if (ignoreSwipedPhotoClick.current) {
-                        ignoreSwipedPhotoClick.current = false;
-                        return;
-                      }
-                      openGallery(event.currentTarget);
-                    }}
-                    onTouchStart={onGalleryTouchStart}
-                    onTouchEnd={onGalleryTouchEnd}
-                    aria-label={t.gallery.zoom}
-                    title={t.gallery.zoom}
-                  >
-                    <Photo
-                      src={currentImage.src}
-                      alt={t.gallery.alts[photoIndex]}
-                      unavailableText={t.general.unavailable}
-                      priority={photoIndex === 0}
-                      sizes="(max-width: 780px) 94vw, 44vw"
-                    />
-                  </button>
-                  <button
-                    className="hero-image-enlarge"
-                    type="button"
-                    aria-label={t.gallery.zoom}
-                    title={t.gallery.zoom}
-                    onClick={(event) => openGallery(event.currentTarget)}
-                  >
-                    <Maximize2 size={17} aria-hidden="true" />
-                  </button>
-                  <div className="hero-gallery-caption">
-                    <span>{t.gallery.labels[photoIndex]}</span>
-                    <button
-                      type="button"
-                      onClick={(event) => openReader(event.currentTarget)}
-                    >
-                      <BookOpen size={16} aria-hidden="true" />{" "}
-                      {t.gallery.readAction}
-                      <ArrowUpRight size={15} aria-hidden="true" />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="hero-gallery-bottom">
-                  <div
-                    className="hero-gallery-thumbnails"
-                    role="group"
-                    aria-label={t.gallery.select}
-                  >
-                    {gallery.map((item, index) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        className={`hero-gallery-thumb${photoIndex === index ? " is-current" : ""}`}
-                        onClick={() => setPhotoIndex(index)}
-                        aria-pressed={photoIndex === index}
-                        aria-label={`${t.gallery.view}: ${t.gallery.labels[index]}`}
-                      >
-                        <span className="hero-gallery-thumb-photo">
-                          <Photo
-                            src={item.src}
-                            alt=""
-                            unavailableText={t.general.unavailable}
-                            sizes="120px"
-                          />
-                        </span>
-                        <span className="hero-gallery-thumb-name">
-                          {t.gallery.labels[index]}
-                        </span>
-                      </button>
-                    ))}
-                  </div>
-                  <div className="hero-gallery-arrows">
-                    <button
-                      type="button"
-                      aria-label={t.general.previousPhoto}
-                      onClick={() => galleryMove(-1)}
-                    >
-                      <ChevronLeft size={18} aria-hidden="true" />
-                    </button>
-                    <button
-                      type="button"
-                      aria-label={t.general.nextPhoto}
-                      onClick={() => galleryMove(1)}
-                    >
-                      <ChevronRight size={18} aria-hidden="true" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <CampaignHero
+          locale={locale}
+          photoIndex={photoIndex}
+          onPhotoSelect={setPhotoIndex}
+          onPhotoMove={galleryMove}
+          onOpenGallery={openGallery}
+          onOpenReader={openReader}
+          onLocaleChange={switchLocale}
+        />
 
         <BookTopicsExplorer locale={locale} />
 

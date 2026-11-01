@@ -25,7 +25,8 @@ import "@/app/campaign-type.css";
 import "@/app/editorial-motion.css";
 import ReaderReviews from "@/components/ReaderReviews";
 import AuthorAndPurchase from "@/components/AuthorAndPurchase";
-import { SiteFooter } from "@/components/SiteChrome";
+import SignatureFinale from "@/components/SignatureFinale";
+import PurchaseIntentEvents from "@/components/PurchaseIntentEvents";
 import BookTopicsExplorer from "@/components/BookTopicsExplorer";
 import BookFAQ from '@/components/BookFAQ';
 import SiteActivity from '@/components/SiteActivity';
@@ -242,6 +243,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
       <SmoothPageScroll paused={readerOpen || lightboxOpen} />
       <EditorialMotion locale={locale} />
       <SiteActivity locale={locale} />
+      <PurchaseIntentEvents />
       <a className="skip-link" href="#main-content">
         {t.general.skip}
       </a>
@@ -265,7 +267,7 @@ export default function BookLanding({ locale }: { locale: Locale }) {
         <BookFAQ locale={locale} />
       </main>
 
-      <SiteFooter locale={locale} hasReviews={hasApprovedReviews} onPreview={(trigger) => openReader(trigger)} />
+            <SignatureFinale locale={locale} hasReviews={hasApprovedReviews} onPreview={(trigger) => openReader(trigger)} />
 
       {lightboxOpen && (
         <div

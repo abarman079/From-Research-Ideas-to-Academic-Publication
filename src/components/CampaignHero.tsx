@@ -18,6 +18,17 @@ type Props = {
   onLocaleChange: (locale: Locale) => void;
 };
 
+/**
+ * Actual transparent image filenames provided by IOJH (keep originals in gallery).
+ * The gallery `id` values come from src/lib/book.ts and are not filenames.
+ */
+const CUTOUT_FILENAME_BY_GALLERY_ID: Record<string, string> = {
+  front: 'cover-main.png',
+  back: 'back-cover.png',
+  spine: 'spine.png',
+  inside: 'interior-v2.png',
+};
+
 const editorial = {
   en: {
     brand: 'An IOJH publication',
@@ -42,7 +53,7 @@ const editorial = {
     previous: 'Previous photograph',
     next: 'Next photograph',
     samplePhoto: 'Read the free sample',
-    intro: 'Made for the research journey',
+    intro: 'A closer look at the printed book',
     scroll: 'Discover what is inside',
   },
   bn: {
@@ -68,7 +79,7 @@ const editorial = {
     previous: 'আগের ছবি',
     next: 'পরের ছবি',
     samplePhoto: 'বিনামূল্যে নমুনা পড়ুন',
-    intro: 'গবেষণার যাত্রায় সঙ্গী',
+    intro: 'মূল মুদ্রিত বইটি একনজরে',
     scroll: 'বইয়ের ভেতর দেখুন',
   },
 } as const;
@@ -79,6 +90,12 @@ export default function CampaignHero({ locale, photoIndex, onPhotoSelect, onPhot
   const justSwiped = useRef(false);
   const [failedImage, setFailedImage] = useState<string | null>(null);
   const current = gallery[photoIndex];
+  // Transparent cutouts affect only the hero. Enlarged gallery originals stay intact.
+  const cutoutFile = CUTOUT_FILENAME_BY_GALLERY_ID[current.id];
+  const cutoutSrc = `/books/research-method-manuscript-publication/hero-cutouts/${cutoutFile}`;
+  const [missingCutouts, setMissingCutouts] = useState<string[]>([]);
+  const useCutout = !missingCutouts.includes(cutoutSrc);
+  const displaySrc = useCutout ? cutoutSrc : current.src;
   const photoFailed = failedImage === current.src;
 
   const startTouch = (event: TouchEvent<HTMLButtonElement>) => {
@@ -143,7 +160,7 @@ export default function CampaignHero({ locale, photoIndex, onPhotoSelect, onPhot
             <span className={styles.photoFrameCorner} aria-hidden="true" />
             <button
               type="button"
-              className={styles.bookPhoto}
+              className={`${styles.bookPhoto} ${current.id === 'inside' ? styles.wideBook : ''}`}
               onClick={event => { if (justSwiped.current) { justSwiped.current = false; return; } onOpenGallery(event.currentTarget); }}
               onTouchStart={startTouch}
               onTouchEnd={finishTouch}
@@ -151,7 +168,19 @@ export default function CampaignHero({ locale, photoIndex, onPhotoSelect, onPhot
               title={content.enlarge}
             >
               {photoFailed ? <span className={styles.imageFallback}>{content.imageUnavailable}</span> : (
-                <Image key={current.src} src={current.src} alt={content.labels[photoIndex]} fill priority={photoIndex === 0} sizes="(max-width: 700px) 85vw, (max-width: 1100px) 38vw, 430px" className={styles.bookImage} onError={() => setFailedImage(current.src)} />
+                <Image
+                  key={displaySrc}
+                  src={displaySrc}
+                  alt={content.labels[photoIndex]}
+                  fill
+                  priority={photoIndex === 0}
+                  sizes="(max-width: 700px) 87vw, (max-width: 1100px) 38vw, 470px"
+                  className={`${styles.bookImage} ${useCutout ? styles.cutoutImage : ''}`}
+                  onError={() => {
+                    if (useCutout) setMissingCutouts((p) => p.includes(cutoutSrc) ? p : [...p, cutoutSrc]);
+                    else setFailedImage(current.src);
+                  }}
+                />
               )}
             </button>
             <button type="button" className={styles.expand} aria-label={content.enlarge} onClick={e => onOpenGallery(e.currentTarget)}><Maximize2 size={16} aria-hidden="true" /></button>

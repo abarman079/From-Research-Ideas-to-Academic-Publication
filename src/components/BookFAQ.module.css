@@ -137,3 +137,24 @@
   .item, .plus { transition: none; }
   .answer { animation: none; }
 }
+
+/* IOJH BRAND GREEN V4:BEGIN */
+/* Green identity — a calm, readable answer section. */
+.section { --faq-ink:#15362a; --faq-blue:#0e8052; --faq-muted:#4b6c59; --faq-border:#d4e5d6; background:linear-gradient(145deg,#fbfcf6,#edf5e9); }
+.eyebrow { color:#187b55; }
+.heading em { color:#14744e; }
+.guide { background:#e4f2e5; border-color:#c1dcc9; }
+.guide>svg { color:#156d4b; }
+.guide p { color:#4b6c59; }
+.links a { color:#145b3d; border-color:#75ad8a; }
+.links a:hover { color:#0d8356; border-color:#0d8356; }
+.item { background:#fffef9; }
+.item:hover,.item[open] { border-color:#99c2a4; }
+.item[open] { background:#fbfff8; box-shadow:0 13px 30px #123d2415; }
+.number { color:#478367; }
+.questionText { color:#153e2d; }
+.plus { color:#126e4b; background:#e4f0e4; }
+.item[open] .plus { color:#0c5f3f; background:#cfe6d1; }
+.answer p { color:#496957; }
+.links a:focus-visible,.question:focus-visible { outline-color:#15875a; }
+/* IOJH BRAND GREEN V4:END */

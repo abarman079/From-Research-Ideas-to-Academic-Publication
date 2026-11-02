@@ -1,0 +1,47 @@
+/* Green identity — author portrait, edition details and point-of-purchase. */
+.section { background:radial-gradient(ellipse 72% 44% at 97% 5%,#d5ead9 0%,transparent 75%),linear-gradient(180deg,#f8f9f1,#eff3e9); }
+.section::before { color:#0a613b10; }
+.heading h2 { color:#122b20; }
+.intro { color:#4b6758; }
+.authorCard { background: #092f26; color:#fffdf6; box-shadow:0 34px 86px #083e2d29; }
+.portraitPanel {
+  background:
+    radial-gradient(ellipse 80% 80% at 53% 25%,#8acc9a80,transparent 70%),
+    radial-gradient(ellipse 80% 74% at 40% 100%,#103a30 0%,transparent 82%),
+    linear-gradient(146deg,#3ba46d 0%,#11734d 48%,#0b4737 100%);
+}
+.portraitImage { filter:drop-shadow(0 19px 22px #04291e55); }
+.portraitCaption { color:#f3ffe9; }
+.label,.role,.backgroundTitle { color:#b8e5be; }
+.authorText h3 { color:#fffdf5; }
+.bio { color:#e0efe2; }
+.credential { border-top-color:#d6f4dd42; }
+.credential dt { color:#fffef6; }
+.credential dd { color:#c6ddcd; }
+.specPanel { background:linear-gradient(158deg,#fffef8,#f0f5eb); color:#182e22; border-color:#8eb39e42; }
+.smallLabel,.buyEyebrow { color:#116e4c; }
+.specPanel h3 { color:#142d21; }
+.editionIntro { color:#51685b; }
+.bookIdentity { border-color:#5d8c6a4d; }
+.fieldLabel,.subjectsBlock>p { color:#0d754a; }
+.bookName { color:#123828; }
+.fact { border-bottom-color:#0b5a3c26; }
+.fact dt { color:#557565; }
+.fact dd { color:#1e392a; }
+.subjectList li { color:#195b3f; border-color:#83b497; background:#edf7eb; }
+.purchasePanel {
+  background:
+    radial-gradient(ellipse 75% 58% at 96% 5%,#8ad39b66,transparent 75%),
+    radial-gradient(ellipse 63% 70% at 4% 100%,#03291f77,transparent 85%),
+    linear-gradient(132deg,#0b422f 0%,#0e704b 55%,#249064 100%);
+  color:#fffdf4;
+}
+.purchasePanel::after { color:#ffffff11; }
+.purchasePanel h3 { color:#ffffff; }
+.purchasePanel .buyEyebrow { color:#ebd59a; }
+.purchasePanel .buyIntro,.retailerNote { color:#e3f4e6; }
+.iojhLink { background:#fffdf3; color:#123527; }
+.iojhLink:hover { background:#e3f2dd; }
+.rokomariLink { background:#0c3229; border-color:#cfedcf7e; color:#fff; }
+.rokomariLink:hover { background:#15533d; }
+.storeLink:focus-visible { outline-color:#ebd59a; }

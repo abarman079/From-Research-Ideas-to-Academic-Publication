@@ -1,0 +1,16 @@
+/* A cohesive IOJH identity. The existing token names remain for compatibility. */
+:root {
+  --iojh-brand-forest: #0a5938;
+  --iojh-brand-deep: #072e23;
+  --iojh-brand-emerald: #137c52;
+  --iojh-brand-leaf: #46ad5d;
+  --iojh-brand-sage: #d5e6d6;
+  --iojh-brand-paper: #fbf9f2;
+  --iojh-brand-gold: #ddbb74;
+  --iojh-v3-ink: #14271d;
+  --iojh-v3-paper: #fbf9f2;
+  --iojh-v3-cerise: #137c52;
+  --iojh-v3-magenta: #0a5938;
+  --iojh-v3-cobalt: #206d55;
+  --iojh-v3-gold: #ddbb74;
+}

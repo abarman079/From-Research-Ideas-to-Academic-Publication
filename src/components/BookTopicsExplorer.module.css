@@ -61,3 +61,26 @@
 @media(max-width:700px){.section{padding:70px 0}.inner{width:calc(100% - 32px)}.heading{grid-template-columns:1fr;gap:17px}.heading h2{font-size:clamp(51px,12vw,73px)}.intro{max-width:600px}.toolbar{flex-direction:column;align-items:flex-start}.filters{justify-content:flex-start}.grid{grid-template-columns:1fr;gap:10px}.card:nth-child(1),.card:nth-child(6),.card:nth-child(7),.card:nth-child(8){grid-column:auto}.card,.card:nth-child(1),.card:nth-child(6){min-height:235px}.card:nth-child(1) .cardTitle,.card:nth-child(6) .cardTitle{font-size:clamp(28px,7vw,38px)}.cardTitle{font-size:clamp(25px,6vw,30px)}.hoverPanel{display:none}.afterGrid{flex-direction:column;align-items:stretch;padding:27px}.afterActions{min-width:100%}.dialogBody{grid-template-columns:1fr}.dialogContents{padding-top:23px}.dialogEditorial{padding-bottom:20px}}
 @media(hover:none){.hoverPanel{display:none}}
 @media(prefers-reduced-motion:reduce){.card,.cardFoot svg,.filter,.filterActive,.hoverPanel,.previewLink,.purchaseLink,.shade,.dialog{animation:none!important;transition:none!important;transform:none!important}}
+
+/* IOJH BRAND GREEN V4:BEGIN */
+/* Green identity — editorial explorer and subject CTA. */
+.section { background:radial-gradient(ellipse 68% 60% at 100% 4%,#125f3e71,transparent 72%),#071f1b; color:#f8fff4; }
+.heading h2 { color:#fffdf5; }
+.heading h2 em { color:#b8dfae; }
+.kicker,.hoverEyebrow { color:#b7debb; }
+.intro,.hint { color:#b9d5c1; }
+.filter { border-color:#cce6d473; color:#edf7ec; }
+.filter:hover { background:#ddf8dc25; }
+.filterActive { background:#f7fff2; border-color:#f7fff2; color:#103a29; }
+.card { --topic-ink:#143224; --topic-accent:#0a6240; }
+.card::after { color:#183b27; }
+.cardFoot { border-top-color:#173b2f38; }
+.hoverPanel { background:linear-gradient(149deg,#0c382b 0%,#0b593e 100%); color:#f7fff3; }
+.hoverFoot { color:#d7dc9c; }
+.afterGrid { background: radial-gradient(ellipse 72% 103% at 88% 8%,#66bd8270,transparent 81%),linear-gradient(111deg,#0a422f,#0e714b 65%,#2b9a63); color:#fffef6; }
+.afterCopy p { color:#e0f2e0; }
+.previewLink { background:#fffef5; color:#103223; border-color:#fffef5; }
+.previewLink:hover { background:#e9f4e0; }
+.purchaseLink { background:#092c24; border-color:#092c24; color:#fff; }
+.purchaseLink:hover { background:#134e39; }
+/* IOJH BRAND GREEN V4:END */

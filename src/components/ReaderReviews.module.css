@@ -58,3 +58,32 @@
 @media(max-width:900px){.introRow {grid-template-columns:1fr; gap:20px}.featured {grid-template-columns:1fr}.portraitPanel {display:flex; justify-content:flex-start; gap:20px}.portrait {width:138px; border-width:6px}.smallPortrait {width:42px; border-width:2px}.reviewCard {border-radius:20px 52px 20px 20px; min-height:280px}.selectionRow {align-items:center}.people {flex:1}.pending {grid-template-columns:.25fr .75fr}}
 @media(max-width:560px){.container{width:calc(100% - 32px)}.section{padding:67px 0}.title{font-size:clamp(43px,11vw,65px)}.featured{gap:16px}.portraitPanel .portrait{width:104px}.reviewCard{padding:30px 24px}.reviewCard blockquote{font-size:23px; line-height:1.7}.credit{align-items:flex-start;flex-direction:column}.selectionRow{flex-direction:column;align-items:stretch}.personButton{flex:1 1 calc(50% - 8px); min-width:136px}.controls{align-self:flex-end}.pending{grid-template-columns:1fr; border-radius:16px 44px 16px 16px}.pendingArt{min-height:100px; flex-direction:row; align-items:center; gap:10px; padding:14px 24px}.pendingArt>span:first-child{font-size:94px; margin:0 auto 0 0}.paperLine{width:25%;height:1px}.pendingCopy{padding:32px 24px}.pendingCopy h3{font-size:30px}.ctaRow{flex-direction:column; align-items:flex-start}}
 @media(prefers-reduced-motion:reduce){.reviewCard{animation:none}.section *{transition:none!important}}
+
+/* IOJH BRAND GREEN V4:BEGIN */
+/* Green identity — soft sage audience section and paper reviews. */
+.section { background:radial-gradient(ellipse 66% 70% at 100% 6%,#eff7dd 0%,transparent 74%),linear-gradient(135deg,#dae9d7 0%,#bfdcc9 100%); color:#183628; }
+.backgroundWord { color:#0c744014; }
+.kicker { color:#0e6f49; }
+.title em { color:#147e54; }
+.intro { color:#4a6959; }
+.portrait { background:#5ca981; border-color:#fffef4; box-shadow:0 18px 58px #0a4d3526; }
+.counter { color:#426e54; }
+.reviewCard { background:#fffdf6; box-shadow:0 21px 68px #184a3020; }
+.quoteMark { color:#65a977; }
+.credit>div:first-child span { color:#587061; }
+.rating strong { color:#47644d; }
+.personButton { background:#fffff3a8; border-color:#9fc8ac; color:#153a2b; }
+.personButton:hover,.selectedPerson { background:#fffef8; }
+.selectedPerson { border-color:#0e8153; box-shadow:0 9px 23px #0a603625; }
+.controls button { background:#fffef7; border-color:#94bda1; color:#17432e; }
+.pending { background:#fffdf5; box-shadow:0 23px 65px #144a3221; }
+.pendingArt { background:linear-gradient(153deg,#2d9b67 0%,#0e6549 58%,#093b2d 100%); color:#fffef4; }
+.paperLine { background:#d9f3d1aa; }
+.pendingEyebrow { color:#127b4f; }
+.pendingCopy p { color:#4b6756; }
+.sampleButton { background:#103f2d; }
+.sampleButton:hover { background:#147a50; }
+.ctaRow { border-top-color:#638f7052; }
+.ctaRow a { color:#0c6844; }
+.section :is(a,button):focus-visible { outline-color:#167a52; }
+/* IOJH BRAND GREEN V4:END */

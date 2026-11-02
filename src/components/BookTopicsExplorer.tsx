@@ -150,9 +150,9 @@ export default function BookTopicsExplorer({ locale, onPreview }: { locale: Loca
             const index = bookTopics.indexOf(topic);
             const content = topic[locale];
             const style: PaletteStyle = {
-              '--topic-bg': ['#E6C66F', '#F2A7B0', '#B5DAD0', '#D4C3EF', '#9CAFD3', '#F1B58E', '#C7C3A6', '#A5CBE7'][index],
-              '--topic-ink': '#241A26',
-              '--topic-accent': '#7E2355',
+              '--topic-bg': ['#D5E8CE', '#DDEABC', '#B9DCD0', '#E7D6A1', '#BBD5C3', '#D6E9E5', '#D5E1BB', '#AED7C5'][index],
+              '--topic-ink': '#143224',
+              '--topic-accent': '#0A6847',
             };
             return (
               <button

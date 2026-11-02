@@ -129,3 +129,50 @@
 @media (prefers-reduced-motion: reduce) {
   .finale *, .footer * { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
 }
+
+/* IOJH BRAND GREEN V4:BEGIN */
+/* Green identity — signature, two-store CTA and publisher footer. */
+.finale {
+  color:#f9fff7;
+  background:
+    radial-gradient(ellipse 68% 80% at 95% 38%,#6eca9775 0%,transparent 72%),
+    radial-gradient(ellipse 66% 77% at 67% 98%,#0a543b 0%,transparent 73%),
+    linear-gradient(115deg,#071c19 0%,#082d26 34%,#0b6247 72%,#16865b 100%);
+}
+.finale::before { border-color:#d2f5d139; }
+.ambientOne { background: radial-gradient(circle,#a6e5a067 0%,transparent 72%); }
+.ambientTwo { background: radial-gradient(circle,#0b513f8c 0%,transparent 69%); }
+.eyebrow { color:#e2efda; }
+.eyebrowDot { background:#dcc075; box-shadow:0 0 0 5px #dcc07520; }
+.overline,.buyLabel { color:#c0e4c1; }
+.title { color:#fffdf5; }
+.title em { color:#e1c077; }
+.lead { color:#dcefe1; }
+.primaryBuy { color:#102e22; background:#e6c57f; box-shadow:0 16px 43px #031f194d; }
+.primaryBuy:hover { background:#f2d99d; }
+.secondaryBuy { background:#e7f7e60d; border-color:#e7f7e6ad; }
+.secondaryBuy:hover { background:#e7f7e62b; }
+.sampleLink { color:#f6fff3; }
+.sampleLink:hover { color:#edcf8b; }
+.retailerNote { color:#cbdfd1; }
+.visualWord { color:#e5ffec16; }
+.orbit { border-color:#f3ffec44; }
+.orbit::after { border-color:#f3ffec21; }
+.backBook { filter:drop-shadow(14px 35px 16px #041f1870); }
+.frontBook { filter:drop-shadow(25px 38px 21px #041b1688); }
+.bookCaption { color:#ecfce8; }
+.editionSeal { background:#e5c37c; color:#153322; box-shadow:0 16px 25px #03191342; }
+.footer { background: radial-gradient(ellipse 80% 95% at 100% 0%,#0e40316e,transparent 82%),#071f1b; color:#f7fff5; }
+.logoPlate { background:#fafbf2; }
+.logoPlate:hover { background:#e7f3df; }
+.brandLabel { color:#add8b9; }
+.footerIntro { color:#b6d0bf; }
+.footerNav h3,.footerStores h3 { color:#b7ddb5; }
+.footerNav a,.footerStores a { color:#e3f0e4; }
+.footerNav a:hover,.footerStores a:hover,.footerBottom a:hover { color:#e5c57e; }
+.typographicBrand { color:#e7f3e6; }
+.typographicBrand span { color:#5ab578; }
+.footerBottom { border-top-color:#c1ebcf36; color:#a9c5b3; }
+.footerBottom a { color:#f3fff1; }
+.finale :is(a,button):focus-visible,.footer a:focus-visible { outline-color:#efd18d; }
+/* IOJH BRAND GREEN V4:END */

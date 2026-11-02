@@ -1,0 +1,44 @@
+/* IOJH Sample Reader Clarity — additive overrides; preserve animated book spreads. */
+.backdrop { padding: 7px; background: rgb(3 24 20 / 90%); }
+.dialog { width: min(98vw, 1740px); height: min(98dvh, 1180px); max-height: 98dvh; background:#fbfcf8; }
+.header { min-height: 58px; padding: 9px clamp(13px, 2vw, 25px); }
+.header h2 { font-size: clamp(20px, 1.8vw, 27px); }
+.toolbar { min-height: 47px; padding: 6px clamp(13px, 2vw, 25px); gap:12px; }
+.instructions { font-size: 12px; }
+.controls { gap: 11px; flex-wrap: wrap; justify-content: flex-end; }
+.stage { background: radial-gradient(ellipse at 50% 40%, #f0f4ef, #dbe7e0); }
+.arrow { width: 42px; height: 58px; background: #ffffffed; }
+.prev { left: 7px; } .next { right: 7px; }
+.footer { min-height: 53px; padding: 6px clamp(10px, 1.5vw, 20px); gap: 14px; }
+.thumbnails[hidden] { display: none !important; }
+.thumbsButton, .readMode { display: inline-flex; gap: 8px; justify-content:center; align-items: center; flex: 0 0 auto; min-height: 35px; border: 1px solid #b8cdc2; background:#fffefa; color:#164633; padding: 7px 12px; font: 700 12px/1.35 Arial,sans-serif; cursor:pointer; transition:background-color .2s,border-color .2s; }
+.thumbsButton:hover, .readMode:hover { background:#e7f2eb; border-color:#74aa90; }
+.readMode[aria-pressed='true'] { color:#fff; background:#116747; border-color:#116747; }
+.readMode[aria-pressed='true']:hover { background:#0d583d; }
+.thumbnails { flex: 1 1 auto; gap: 6px; }
+.buy { margin-left:auto; background:#115c3d; }
+.buy:hover { background:#0d754a; }
+.counter { color:#104a35; }
+.pageImage { image-rendering:auto; object-fit:contain; background:#fff; }
+/* Reader keeps book geometry fixed during turns; no transform or size animation. */
+@media (max-width: 740px) {
+ .backdrop { padding:0; }
+ .dialog { width:100%; height:100dvh; max-height:100dvh; }
+ .header { min-height:54px; padding:8px 12px; }
+ .toolbar { min-height:57px; padding:6px 12px; }
+ .controls { width:100%; justify-content:space-between; gap:6px; }
+ .readMode { display:none; } /* Mobile is single-page by default. */
+ .instructions { font-size:11px; }
+ .footer { min-height:51px; padding:6px 8px; }
+ .thumbsButton { font-size:11px; padding:6px 9px; }
+ .arrow { width:30px; height:48px; }
+ .prev {left:2px}.next{right:2px}
+}
+@media (max-width:390px) {
+ .footer { flex-direction:row; align-items:center; flex-wrap:wrap; min-height:53px; gap:6px; }
+ .buy { min-height:34px; align-self:auto; }
+ .thumbnails:not([hidden]) { order:3; flex-basis:100%; }
+}
+@media (prefers-reduced-motion:reduce) {
+ .readMode,.thumbsButton { transition:none; }
+}

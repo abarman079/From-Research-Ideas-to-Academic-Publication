@@ -1,0 +1,70 @@
+/* Green identity — preserves the cinematic, unified photo backdrop. */
+.campaign { background: #fbf9f2; color: #14271d; }
+.campaign :is(a,button):focus-visible { outline-color: #0d7952; }
+.masthead { background: #fbf9f2; }
+.brandCaption { color: #173f2d; }
+.editionTop { color: #406554; }
+.localeGroup { background: #e8efe5; border-color: #c4daca; }
+.localeGroup button { color: #315b45; }
+.localeGroup button.activeLocale { background: #0a5938; color: #ffffff; box-shadow: 0 3px 15px #0a593833; }
+.localeGroup button:hover { background: #ffffff; }
+.localeGroup button.activeLocale:hover { background: #0a5938; }
+.heroGrid {
+  background:
+    radial-gradient(ellipse 50% 78% at 88% 9%, rgba(125,205,158,.58),transparent 82%),
+    radial-gradient(ellipse 45% 61% at 110% 89%, rgba(1,28,23,.87),transparent 91%),
+    radial-gradient(ellipse 38% 54% at 65% 65%, rgba(187,233,194,.29), transparent 77%),
+    linear-gradient(104deg,#fbf9f2 0%,#fbf9f2 29%,#f1f4eb 40%,#d4e8d6 48%,#81bda0 60%,#2e8969 73%,#0a563d 90%,#06372c 100%);
+}
+.heroGrid::before {
+  background:
+    radial-gradient(ellipse 56% 63% at 58% 53%, rgba(255,255,243,.52), transparent 78%),
+    radial-gradient(ellipse 43% 55% at 95% 55%, rgba(20,122,81,.26), transparent 86%);
+  opacity: .7;
+}
+.heroGrid::after { background: radial-gradient(ellipse 33% 38% at 62% 45%,rgba(255,255,255,.14),transparent 100%),linear-gradient(107deg,transparent 63%,rgba(255,255,255,.055) 66%,transparent 73%); }
+.headline, .bookTitle { color: #12271c; }
+.headlineAccent {
+  background: linear-gradient(114deg,#0b5739 0%,#11805a 64%,#218b53 100%);
+  color: #126a46;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.bengali .headlineAccent { background: none; color: #0a6e49; -webkit-text-fill-color: currentColor; }
+.eyebrow { color: #0c653f; }
+.eyebrowDot { background: #15945b; box-shadow: 0 0 0 5px #15945b23; }
+.description { color: #3a5546; }
+.signature { color: #44664f; }
+.signatureRule { background: #6da781; }
+.primaryButton { background: #083c2b; border-color: #083c2b; color: #fff; box-shadow: 0 11px 27px #073d2b2c; }
+.primaryButton:hover { background: #137a52; border-color: #137a52; box-shadow: 0 17px 38px #0a573c42; }
+.secondaryButton { background: #ffffffbd; color: #12372a; border-color: #93b7a0; box-shadow: 0 4px 21px #265a3e15; }
+.secondaryButton:hover { background: #fffef8; border-color: #137a52; }
+.visualSide { background: transparent; color: #fffdf5; }
+.visualSide::before { background: radial-gradient(ellipse 55% 62% at 62% 49%,rgba(5,60,43,.19),transparent 100%),radial-gradient(ellipse 62% 57% at 65% 12%,rgba(213,255,215,.17),transparent 100%); }
+.visualSide::after { border-color: #e5ffdc44; box-shadow: 0 0 0 85px #ffffff07,0 0 0 173px #ffffff05; }
+.visualGlow { background: radial-gradient(ellipse at 68% 35%,rgba(204,255,198,.51),transparent 54%),radial-gradient(ellipse at 45% 65%,rgba(48,156,107,.25),transparent 67%); }
+.ghostType { -webkit-text-stroke-color: #f3ffef30; text-stroke-color: #f3ffef30; }
+.photoFrame::before { background: radial-gradient(ellipse at 50% 43%,rgba(215,255,213,.47),rgba(57,164,108,.23) 41%, transparent 74%); }
+.photoFrameCorner { background: #e3bb6b; box-shadow: 0 13px 37px #0a2f243b; }
+.bookPhoto { filter: drop-shadow(0 32px 25px #062e266c); }
+.bookPhoto:hover { filter: drop-shadow(0 42px 34px #062e2675); }
+.expand { background: #064b3a38; border-color: #f4ffedbb; }
+.galleryTab { border-color: #ffffff72; }
+.galleryTabSelected { border-top-color: #f7d891; }
+.galleryNav button { background: #063e2e34; border-color: #f3ffed94; }
+.editionStamp { color: #fcfff0; text-shadow: 0 2px 12px #072e2860; }
+.chapterBand { background: #092d24; color: #f8fff6; }
+.chapterNumber,.exploreLink svg { color: #b8df91; }
+@media (max-width: 760px) {
+  .masthead { background: #fbf9f2; }
+  .heroGrid {
+    background:
+      radial-gradient(ellipse 85% 42% at 80% 16%,rgba(162,237,178,.5),transparent 91%),
+      radial-gradient(ellipse 90% 33% at 16% 34%,rgba(4,54,43,.41),transparent 86%),
+      linear-gradient(180deg,#338c64 0px,#137d55 190px,#0a5d46 365px,#74b69c 465px,#c8e1cd 536px,#fbf9f2 640px,#fbf9f2 100%);
+  }
+  .heroGrid::before { background:radial-gradient(ellipse at 50% 35%,rgba(206,244,210,.35),transparent 73%); }
+}
+@media (prefers-reduced-motion: reduce) { .bookPhoto,.bookPhoto:hover { filter:drop-shadow(0 28px 26px #062e2670); } }

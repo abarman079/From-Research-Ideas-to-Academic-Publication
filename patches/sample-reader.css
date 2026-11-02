@@ -1,0 +1,21 @@
+/* IOJH final sample reader: use more of the screen for actual book pages. */
+@media (min-width: 741px) {
+  .backdrop { padding: 6px; }
+  .dialog {
+    width: min(98vw, 1810px);
+    height: min(97dvh, 1180px);
+    max-height:97dvh;
+  }
+  .header { min-height: 55px; padding: 8px clamp(12px,2vw,24px); }
+  .toolbar { min-height: 42px; padding: 6px clamp(12px,2vw,24px); }
+  .footer { min-height: 48px; padding: 5px clamp(9px,1.6vw,19px); }
+}
+.stage { background: radial-gradient(ellipse at 50% 38%,#f5f7f3,#e2ebe5); }
+.arrow { width: 40px; height: 54px; }
+.prev { left: 4px; } .next { right: 4px; }
+.pageImage { image-rendering: auto; object-fit: contain; }
+@media (max-width:740px) {
+  .dialog { width:100%; height:100dvh; max-height:100dvh; }
+  .header { min-height:52px; padding:8px 12px; }
+  .stage { min-height:0; }
+}

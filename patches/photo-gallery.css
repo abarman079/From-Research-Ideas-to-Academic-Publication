@@ -1,0 +1,49 @@
+/* IOJH final gallery clarity: show the full photograph and leave space to zoom. */
+@media (min-width: 741px) {
+  .photo-modal {
+    width: min(97vw, 1880px);
+    height: min(95dvh, 1160px);
+    max-height: 95dvh;
+  }
+}
+.photo-modal { display: flex; flex-direction: column; }
+.photo-modal .modal-header { flex: 0 0 auto; min-height: 60px; padding: 10px clamp(12px,2vw,24px); }
+.photo-modal .modal-image {
+  flex: 1 1 auto; min-height: 0; height: auto;
+  overflow: auto; position: relative;
+  background: radial-gradient(ellipse at 48% 46%, #f8faf6, #e6efe8);
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.photo-modal .iojh-photo-canvas {
+  position: relative; width: 100%; height: 100%; min-height: 100%;
+  background: transparent;
+}
+.photo-modal .modal-image img { padding: 2px; object-fit: contain; }
+.photo-modal .modal-image.iojh-photo-zoomed .iojh-photo-canvas {
+  width: 165%; height: 165%;
+}
+.photo-modal .modal-image.iojh-photo-zoomed { cursor: move; }
+.photo-modal .modal-controls { flex:0 0 auto; padding: 9px clamp(10px,2vw,22px); }
+.photo-modal .iojh-photo-zoom-toggle {
+  margin-left:auto; padding: 8px 15px;
+  color: #104a35; background: #f5fbf6;
+  border: 1px solid #b7d2c1; border-radius: 2px;
+  font: 700 12px/1.35 Arial,sans-serif;
+  white-space: nowrap; cursor: pointer;
+  transition: background-color .2s,border-color .2s;
+}
+.photo-modal .iojh-photo-zoom-toggle:hover {background:#e6f4e9;border-color:#4a976b;}
+.photo-modal .iojh-photo-zoom-toggle[aria-pressed='true'] {background:#0b6244; color:#fff;border-color:#0b6244;}
+.photo-modal .iojh-photo-zoom-toggle:focus-visible {outline:3px solid #3b9668;outline-offset:2px;}
+@media (max-width: 740px) {
+  .modal-shade:has(> .photo-modal) { padding:0; }
+  .photo-modal { width:100%; height:100dvh; max-height:100dvh; }
+  .photo-modal .modal-header { min-height:58px; padding: 10px 12px; gap:8px; }
+  .photo-modal .modal-image.iojh-photo-zoomed .iojh-photo-canvas {width:200%;height:200%;}
+  .photo-modal .modal-controls {padding:9px; gap:6px;}
+  .photo-modal .iojh-photo-zoom-toggle {margin-left:0; font-size:11px; padding:7px 10px;}
+}
+@media (prefers-reduced-motion:reduce) {
+  .photo-modal .iojh-photo-zoom-toggle {transition:none;}
+}

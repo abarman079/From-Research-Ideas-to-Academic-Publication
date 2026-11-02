@@ -23,10 +23,10 @@ type Props = {
  * The gallery `id` values come from src/lib/book.ts and are not filenames.
  */
 const CUTOUT_FILENAME_BY_GALLERY_ID: Record<string, string> = {
-  front: 'cover-main.png',
-  back: 'back-cover.png',
-  spine: 'spine.png',
-  inside: 'interior-v2.png',
+  front: '01_front_cover_web_transparent.webp',
+  back: '02_back_cover_web_transparent.webp',
+  spine: '03_spine_web_transparent.webp',
+  inside: '04_open_pages_web_transparent.webp',
 };
 
 const editorial = {
@@ -174,7 +174,7 @@ export default function CampaignHero({ locale, photoIndex, onPhotoSelect, onPhot
                   alt={content.labels[photoIndex]}
                   fill
                   priority={photoIndex === 0}
-                  sizes="(max-width: 700px) 87vw, (max-width: 1100px) 38vw, 470px"
+                  sizes="(max-width: 760px) 100vw, (max-width: 1100px) 55vw, 600px"
                   className={`${styles.bookImage} ${useCutout ? styles.cutoutImage : ''}`}
                   onError={() => {
                     if (useCutout) setMissingCutouts((p) => p.includes(cutoutSrc) ? p : [...p, cutoutSrc]);

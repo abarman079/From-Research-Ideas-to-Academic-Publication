@@ -6,11 +6,11 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight, ArrowUpRight, BookOpen, ChevronUp, MoveUpRight } from 'lucide-react';
 import type { Locale } from '@/i18n/copy';
-import { book } from '@/lib/book';
+import { book, gallery } from '@/lib/book';
 import { IOJH_LOGO_PATH, IOJH_WEBSITE_URL, ROKOMARI_BOOK_URL } from '@/lib/brand';
 import styles from './SignatureFinale.module.css';
 
-const base = '/books/research-method-manuscript-publication/hero-cutouts';
+
 
 const copy = {
   en: {
@@ -174,10 +174,10 @@ export default function SignatureFinale({ locale, hasReviews, onPreview }: Props
             <div className={styles.visualWord} aria-hidden="true">IOJH</div>
             <div className={styles.orbit} aria-hidden="true" />
             <div className={styles.backBook} data-finale-reveal>
-              <Image src={`${base}/back-cover.png`} alt="" width={640} height={820} sizes="(max-width: 720px) 42vw, 22vw" />
+              <Image src={gallery[1].src} alt="" width={640} height={820} sizes="(max-width: 720px) 42vw, 22vw" />
             </div>
             <div className={styles.frontBook} data-finale-reveal>
-              <Image src={`${base}/cover-main.png`} alt={bn ? 'বইটির প্রচ্ছদ' : 'Original printed book cover'} width={720} height={940} sizes="(max-width: 720px) 63vw, 30vw" />
+              <Image src={gallery[0].src} alt={bn ? 'বইটির প্রচ্ছদ' : 'Original printed book cover'} width={720} height={940} sizes="(max-width: 720px) 63vw, 30vw" />
             </div>
             <span className={styles.bookCaption}>{t.bookCaption}</span>
             <span className={styles.editionSeal} aria-hidden="true">IOJH<br />BOOK</span>

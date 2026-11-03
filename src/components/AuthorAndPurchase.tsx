@@ -60,7 +60,7 @@ export default function AuthorAndPurchase({ locale }: { locale: Locale }) {
                 <span className={styles.placeholderName}>Md. Kariul Islam</span>
               </div>
             )}
-            <p className={styles.portraitCaption}>{c.portraitCaption}</p>
+
           </div>
 
           <div className={styles.authorText}>

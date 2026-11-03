@@ -1,0 +1,124 @@
+/* IOJH MOBILE & TABLET REVIEW FIX 2026-11-03:BEGIN */
+/*
+ * The compact layout shortened the review sections but its global .portrait
+ * rule subsequently overrode .smallPortrait, making the reviewer thumbnails
+ * huge on small displays. The selection cards now use a responsive grid.
+ * Keep all photos, names, published review text and interaction handlers.
+ */
+/* Specificity also fixes thumbnail sizes on small desktop widths. */
+.personButton .smallPortrait {
+  width: 42px;
+  height: 42px;
+  border-width: 2px;
+  flex: 0 0 auto;
+}
+.personButton > span:last-child { min-width: 0; }
+
+@media (min-width: 641px) and (max-width: 960px) {
+  .selectionRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .people {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    gap: 10px;
+    flex: none;
+  }
+  .personButton {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr);
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    min-width: 0;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    border-radius: 14px;
+    flex: none;
+  }
+  .personButton .smallPortrait {
+    width: 52px;
+    height: 52px;
+    border-width: 3px;
+  }
+  .personButton > span:last-child {
+    min-width: 0;
+    overflow-wrap: break-word;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .controls { align-self: flex-end; }
+}
+
+@media (max-width: 640px) {
+  .selectionRow {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .people {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    width: 100%;
+    flex: none;
+  }
+  .personButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 122px;
+    padding: 12px 7px;
+    gap: 8px;
+    text-align: center;
+    border-radius: 14px;
+    flex: none;
+  }
+  .personButton .smallPortrait {
+    width: 66px;
+    height: 66px;
+    border-width: 3px;
+    box-shadow: 0 5px 14px #113d2e19;
+  }
+  .personButton .smallPortrait .initials { font-size: 21px; }
+  .personButton > span:last-child {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
+    white-space: normal;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  /* If there are five reviews, center the last person's card naturally. */
+  .personButton:nth-last-child(1):nth-child(odd) {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    gap: 14px;
+    min-height: 88px;
+    justify-content: center;
+  }
+  .controls {
+    align-self: flex-end;
+    gap: 9px;
+  }
+  .controls button { width: 44px; height: 44px; }
+}
+
+@media (max-width: 360px) {
+  .people { gap: 8px; }
+  .personButton { min-height: 112px; padding: 10px 5px; }
+  .personButton .smallPortrait { width: 59px; height: 59px; }
+  .personButton > span:last-child { font-size: 11.5px; }
+}
+/* IOJH MOBILE & TABLET REVIEW FIX 2026-11-03:END */

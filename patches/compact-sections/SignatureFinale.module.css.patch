@@ -1,0 +1,64 @@
+/* Reduce finale and footer visual height while preserving atmospheric art and book images. */
+.finale { min-height: 0; }
+.finaleInner {
+  min-height: 612px;
+  padding-block: clamp(57px, 6.1vw, 96px);
+  gap: clamp(18px, 2vw, 36px);
+}
+.overline { margin: clamp(24px, 2.8vw, 41px) 0 12px; }
+.title { font-size: clamp(49px, 5.3vw, 80px); line-height: 1.06; }
+.lead { margin-top: clamp(16px, 2vw, 27px); line-height: 1.8; }
+.buyArea { margin-top: clamp(19px, 2.3vw, 32px); }
+.buyLabel { margin-bottom: 10px; }
+.primaryBuy, .secondaryBuy { min-height: 57px; padding: 14px 18px; }
+.sampleLink { margin-top: 11px; }
+.retailerNote { margin-top: 10px; }
+.visual { min-height: clamp(375px, 34vw, 548px); }
+.backBook { width: min(72%, 345px); }
+.frontBook { width: min(83%, 447px); }
+.bookCaption { font-size: 14px; }
+.editionSeal { width: 60px; height: 60px; }
+
+.footerInner { padding: clamp(38px, 4.2vw, 61px) clamp(28px, 6.4vw, 102px) 20px; }
+.footerPrimary { column-gap: clamp(24px, 4vw, 65px); }
+.logoPlate { min-height: 74px; padding: 10px 16px; }
+.brandImage { height: 55px; }
+.brandLabel { margin: 16px 0 9px; }
+.footerNav, .footerStores { gap: 11px; }
+.footerNav h3, .footerStores h3 { margin-bottom: 6px; }
+.typographicBrand {
+  font-size: clamp(125px, 20vw, 305px);
+  margin-top: clamp(36px, 4.6vw, 65px);
+}
+.footerBottom { padding-top: 16px; }
+.bengali .title { letter-spacing: 0; line-height: 1.39; }
+
+@media (max-width: 1180px) {
+  .finaleInner { min-height: 570px; }
+  .title { font-size: clamp(48px, 5.8vw, 73px); }
+  .visual { min-height: clamp(340px, 39vw, 490px); }
+  .footerInner { padding-inline: clamp(30px, 5vw, 75px); }
+}
+@media (max-width: 820px) {
+  .finaleInner { min-height: 0; padding-block: 54px 28px; gap: 5px; }
+  .title { font-size: clamp(43px, 8.2vw, 65px); }
+  .visual { min-height: clamp(337px, 62vw, 470px); }
+  .footerPrimary { row-gap: 36px; }
+  .typographicBrand { font-size: clamp(125px, 26vw, 236px); margin-top: 46px; }
+}
+@media (max-width: 520px) {
+  .finaleInner { padding: 49px 23px 26px; }
+  .title { font-size: clamp(40px, 10.4vw, 54px); }
+  .bengali .title { font-size: clamp(33px, 8.6vw, 45px); line-height: 1.4; }
+  .overline { margin-top: 23px; }
+  .lead { line-height: 1.78; }
+  .visual { min-height: clamp(295px, 83vw, 421px); margin-top: 13px; }
+  .footerInner { padding: 41px 23px 18px; }
+  .footerPrimary { row-gap: 30px; }
+  .footerNavColumns { gap: 20px; }
+  .typographicBrand { font-size: clamp(104px, 30vw, 178px); margin-top: 38px; }
+  .footerBottom { padding-top: 15px; }
+}
+@media (max-width: 355px) {
+  .typographicBrand { font-size: 29vw; }
+}

@@ -97,3 +97,64 @@
 .rokomariLink:hover { background:#15533d; }
 .storeLink:focus-visible { outline-color:#ebd59a; }
 /* IOJH BRAND GREEN V4:END */
+
+/* IOJH COMPACT SECTIONS 2026 AuthorAndPurchase.module.css:BEGIN */
+/* Compact author biography and edition/purchase cards; no content or media changes. */
+.section { padding-block: clamp(55px, 6.1vw, 90px) clamp(59px, 6.4vw, 94px); }
+.heading { margin-bottom: clamp(24px, 3vw, 40px); gap: 24px; }
+.heading h2 { font-size: clamp(49px, 6.4vw, 89px); line-height: 1.07; }
+.authorCard { min-height: 470px; }
+.portraitPanel { min-height: 425px; }
+.portraitImageWrap, .portraitPlaceholder { min-height: 350px; }
+.authorText { padding: clamp(28px, 3.6vw, 57px); }
+.authorText h3 { font-size: clamp(42px, 4.25vw, 65px); margin: 12px 0 10px; }
+.role { margin-bottom: 15px; }
+.bio { margin-bottom: 18px; line-height: 1.78; }
+.backgroundTitle { margin-bottom: 12px; }
+.credentialGrid { gap: 11px 22px; }
+.credential { padding-top: 9px; }
+.infoGrid { gap: 14px; margin-top: 15px; }
+.specPanel, .purchasePanel { padding: clamp(25px, 3.2vw, 47px); }
+.specPanel h3, .purchasePanel h3 {
+  font-size: clamp(33px, 3.35vw, 50px);
+  margin: 12px 0 12px;
+}
+.editionIntro, .buyIntro { margin-bottom: 17px; }
+.bookIdentity { padding: 13px 0; margin-top: 10px; }
+.factsGrid { margin-top: 9px; }
+.fact { padding: 12px 0; }
+.subjectsBlock { margin-top: 17px; }
+.storeList { margin-top: clamp(17px, 2.2vw, 27px); gap: 10px; }
+.storeLink { min-height: 77px; padding: 13px 18px; }
+.retailerNote { margin-top: 16px; }
+:global(html[lang^='bn']) .heading h2 { font-size: clamp(41px, 5.2vw, 68px); line-height: 1.38; }
+:global(html[lang^='bn']) .specPanel h3,
+:global(html[lang^='bn']) .purchasePanel h3 { line-height: 1.38; }
+
+@media (max-width: 1020px) {
+  .authorCard { min-height: 0; }
+  .portraitPanel { min-height: 390px; }
+}
+@media (max-width: 740px) {
+  .section { padding-block: 52px 55px; }
+  .heading { margin-bottom: 24px; gap: 12px; }
+  .heading h2 { font-size: clamp(42px, 8.5vw, 58px); }
+  :global(html[lang^='bn']) .heading h2 { font-size: clamp(38px, 8vw, 55px); }
+  .portraitPanel { min-height: 300px; }
+  .portraitImageWrap, .portraitPlaceholder { min-height: 277px; max-height: 355px; }
+  .authorText { padding: 29px 24px; }
+  .authorText h3 { font-size: clamp(38px, 8vw, 52px); }
+  .bio { margin-bottom: 17px; }
+  .infoGrid { gap: 10px; margin-top: 10px; }
+  .specPanel, .purchasePanel { padding: 27px 24px; }
+  .specPanel h3, .purchasePanel h3 { font-size: clamp(32px, 7vw, 43px); }
+  .storeLink { min-height: 70px; }
+}
+@media (max-width: 480px) {
+  .authorText { padding: 27px 22px; }
+  .credentialGrid { grid-template-columns: 1fr; gap: 10px; }
+  .specPanel, .purchasePanel { padding: 25px 21px; }
+  .heading h2 { font-size: 43px; }
+  :global(html[lang^='bn']) .heading h2 { font-size: 40px; }
+}
+/* IOJH COMPACT SECTIONS 2026 AuthorAndPurchase.module.css:END */

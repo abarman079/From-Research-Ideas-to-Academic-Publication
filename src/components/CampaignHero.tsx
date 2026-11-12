@@ -41,6 +41,7 @@ const editorial = {
     body: 'From identifying a research problem and planning a study to preparing a manuscript and understanding journal publication—a practical guide written in Bengali.',
     order: 'Order the printed book',
     sample: 'Read 15 sample pages',
+    register: 'Register',
     format: 'PRINTED EDITION  /  WRITTEN IN BENGALI',
     authored: 'BY KARIUL ISLAM',
     chapterTitle: 'THE THREE PARTS OF THE BOOK',
@@ -67,6 +68,7 @@ const editorial = {
     body: 'গবেষণা সমস্যা নির্ধারণ ও পরিকল্পনা থেকে পাণ্ডুলিপি প্রস্তুতি এবং জার্নালে প্রকাশনার প্রক্রিয়া—গুরুত্বপূর্ণ বিষয়গুলো একত্রে আলোচনা করা হয়েছে এই বাংলা বইয়ে।',
     order: 'মুদ্রিত বইটি অর্ডার করুন',
     sample: '১৫ পৃষ্ঠা পড়ে দেখুন',
+    register: 'নিবন্ধন',
     format: 'মুদ্রিত সংস্করণ  /  বাংলা ভাষা',
     authored: 'লেখক: কারিউল ইসলাম',
     chapterTitle: 'বইয়ের তিনটি প্রধান অংশ',
@@ -123,6 +125,9 @@ export default function CampaignHero({ locale, photoIndex, onPhotoSelect, onPhot
         </a>
         <div className={styles.mastRight}>
           <span className={styles.editionTop}>{content.format}</span>
+          <nav className={styles.registrationNav} aria-label={locale === 'bn' ? 'নিবন্ধন' : 'Registration'}>
+            <a className={styles.registerNav} href={`/${locale}/register?source=nav`}>{content.register}<ArrowUpRight size={16} aria-hidden="true" /></a>
+          </nav>
           <div className={styles.localeGroup} role="group" aria-label={content.lang}>
             <button type="button" lang="bn" aria-pressed={locale === 'bn'} className={locale === 'bn' ? styles.activeLocale : ''} onClick={() => onLocaleChange('bn')}>বাংলা</button>
             <button type="button" lang="en" aria-pressed={locale === 'en'} className={locale === 'en' ? styles.activeLocale : ''} onClick={() => onLocaleChange('en')}>EN</button>

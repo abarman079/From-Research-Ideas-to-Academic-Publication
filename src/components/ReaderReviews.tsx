@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ArrowRight,
   ArrowUpRight,
@@ -64,19 +64,18 @@ function Portrait({
   small?: boolean;
   locale: Locale;
 }) {
-  const [failed, setFailed] = useState(false);
-  useEffect(() => setFailed(false), [review.photo]);
+  const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
   const t = copy[locale];
   return (
     <span className={`${styles.portrait} ${small ? styles.smallPortrait : ""}`}>
-      {review.photo && !failed ? (
+      {review.photo && failedPhoto !== review.photo ? (
         <Image
           src={review.photo}
           alt={`${t.picture} ${review.name}`}
           fill
           sizes={small ? "64px" : "(max-width: 760px) 136px, 236px"}
           className={styles.portraitImage}
-          onError={() => setFailed(true)}
+          onError={() => setFailedPhoto(review.photo)}
         />
       ) : (
         <span className={styles.initials} aria-hidden="true">

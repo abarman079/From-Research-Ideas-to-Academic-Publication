@@ -23,6 +23,8 @@ const copy = {
     iojh: 'Order from IOJH',
     rokomari: 'Buy on Rokomari',
     sample: 'Read the first 15 pages',
+    register: 'Register your interest',
+    registerNote: 'Free registration · not a pre-order',
     available: 'CHOOSE YOUR BOOKSTORE',
     bookCaption: 'The original printed edition',
     finalNote: 'The retailer confirms current price, availability and delivery terms.',
@@ -50,6 +52,8 @@ const copy = {
     iojh: 'IOJH থেকে অর্ডার করুন',
     rokomari: 'রকমারিতে কিনুন',
     sample: 'প্রথম ১৫ পৃষ্ঠা পড়ে দেখুন',
+    register: 'আগ্রহ নিবন্ধন করুন',
+    registerNote: 'বিনামূল্যে নিবন্ধন · প্রি-অর্ডার নয়',
     available: 'বিক্রেতা বেছে নিন',
     bookCaption: 'বইটির মূল মুদ্রিত সংস্করণ',
     finalNote: 'বর্তমান মূল্য, স্টক ও ডেলিভারি-সংক্রান্ত তথ্য বিক্রেতার পৃষ্ঠায় নিশ্চিত করুন।',
@@ -166,6 +170,10 @@ export default function SignatureFinale({ locale, hasReviews, onPreview }: Props
                 <BookOpen size={18} aria-hidden="true" /> {t.sample}
                 <ArrowRight size={17} aria-hidden="true" />
               </button>
+              <div className={styles.registerLeadRow}>
+                <a href={`/${locale}/register?source=finale`} className={styles.registerLeadLink}>{t.register} <ArrowRight size={17} aria-hidden="true" /></a>
+                <span>{t.registerNote}</span>
+              </div>
             </div>
             <p data-finale-reveal className={styles.retailerNote}>{t.finalNote}</p>
           </div>

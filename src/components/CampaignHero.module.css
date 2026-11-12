@@ -590,3 +590,15 @@
 }
 @media (prefers-reduced-motion: reduce) { .bookPhoto,.bookPhoto:hover { filter:drop-shadow(0 28px 26px #062e2670); } }
 /* IOJH BRAND GREEN V4:END */
+
+
+/* IOJH BOOK REGISTRATION UPGRADE A — active hero masthead navigation. */
+.registrationNav { display:flex; align-items:center; }
+.registerNav { min-height:43px; padding:0 18px; display:inline-flex; align-items:center; justify-content:center; gap:10px; border:1px solid #0b694a; background:#0b694a; color:#fffdf6 !important; border-radius:2px; font-size:12px; font-weight:800; letter-spacing:.01em; white-space:nowrap; box-shadow:0 4px 16px #0b694a19; transition:background .25s,transform .25s,box-shadow .25s; }
+.registerNav:hover { background:#0a4c38; transform:translateY(-2px); box-shadow:0 12px 23px #0b694a30; }
+.registerNav svg { transition:transform .25s; }
+.registerNav:hover svg { transform:translate(2px,-2px); }
+@media(max-width:900px) { .editionTop { display:none; } .mastRight { gap:12px; } }
+@media(max-width:520px) { .brandCaption { display:none; } .masthead { gap:9px; } .mastRight { gap:7px; } .registerNav { min-height:36px; padding:0 10px; gap:5px; font-size:11px; } .registerNav svg { width:13px; } .localeGroup button { min-width:35px; padding:6px 7px; } }
+@media(prefers-reduced-motion:reduce) { .registerNav,.registerNav svg { transition:none; } }
+/* END IOJH BOOK REGISTRATION UPGRADE A */

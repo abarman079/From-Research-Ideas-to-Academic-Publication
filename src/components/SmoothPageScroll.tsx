@@ -8,7 +8,6 @@ import type Lenis from 'lenis';
 export default function SmoothPageScroll({ paused }: { paused: boolean }) {
   const scroller = useRef<Lenis | null>(null);
   const pausedRef = useRef(paused);
-  pausedRef.current = paused;
 
   useEffect(() => {
     const media = window.matchMedia('(min-width: 768px) and (prefers-reduced-motion: no-preference)');
@@ -50,6 +49,7 @@ export default function SmoothPageScroll({ paused }: { paused: boolean }) {
   }, []);
 
   useEffect(() => {
+    pausedRef.current = paused;
     if (paused) scroller.current?.stop();
     else scroller.current?.start();
   }, [paused]);

@@ -64,10 +64,9 @@ const labels = {
 } as const;
 
 function PublisherMark({ light = false }: { light?: boolean }) {
-  const [imageFailed, setImageFailed] = useState(false);
+  const [failedLogoPath, setFailedLogoPath] = useState<string | null>(null);
   const logoPath = IOJH_LOGO_PATH;
-  useEffect(() => setImageFailed(false), [logoPath]);
-  if (logoPath && !imageFailed) {
+  if (logoPath && failedLogoPath !== logoPath) {
     return (
       <Image
         src={logoPath}
@@ -76,7 +75,7 @@ function PublisherMark({ light = false }: { light?: boolean }) {
         height={66}
         unoptimized
         priority={!light}
-        onError={() => setImageFailed(true)}
+        onError={() => setFailedLogoPath(logoPath)}
         className={styles.brandImage}
       />
     );

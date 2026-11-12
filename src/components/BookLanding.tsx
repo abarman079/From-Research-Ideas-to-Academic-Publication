@@ -29,6 +29,7 @@ import SignatureFinale from "@/components/SignatureFinale";
 import PurchaseIntentEvents from "@/components/PurchaseIntentEvents";
 import BookTopicsExplorer from "@/components/BookTopicsExplorer";
 import BookFAQ from '@/components/BookFAQ';
+import LeadRegistrationSection from '@/components/LeadRegistrationSection';
 import SiteActivity from '@/components/SiteActivity';
 
 type PhotoProps = {
@@ -48,10 +49,9 @@ function Photo({
   sizes = "(max-width: 768px) 90vw, 50vw",
   unavailableText,
 }: PhotoProps) {
-  const [unavailable, setUnavailable] = useState(false);
-  useEffect(() => setUnavailable(false), [src]);
+  const [unavailableSrc, setUnavailableSrc] = useState<string | null>(null);
 
-  if (unavailable) {
+  if (unavailableSrc === src) {
     return (
       <div
         className={`image-fallback ${className}`}
@@ -72,7 +72,7 @@ function Photo({
       priority={priority}
       sizes={sizes}
       className={className}
-      onError={() => setUnavailable(true)}
+      onError={() => setUnavailableSrc(src)}
     />
   );
 }
@@ -257,6 +257,8 @@ export default function BookLanding({ locale }: { locale: Locale }) {
         />
 
         <BookTopicsExplorer locale={locale} onPreview={(trigger) => openReader(trigger)} />
+
+        <LeadRegistrationSection locale={locale} />
 
         <ReaderReviews locale={locale} onPreview={(trigger) => openReader(trigger)} />
 

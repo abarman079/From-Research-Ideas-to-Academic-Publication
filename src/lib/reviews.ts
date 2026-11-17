@@ -12,9 +12,9 @@ export type Review = {
 export const reviews: Review[] = [
   {
     id: "sifatul-haque",
-    name: "Sifatul Haque",
+    name: "Mufrat Montasir",
     rating: 5,
-    photo: "/reviewers/sifatul-haque.jpg",
+    photo: "/reviewers/sifatul-haque.jpg?v=20261117",
     approved: true,
     quote: {
       bn: "গবেষণার বিষয় নির্বাচন থেকে পদ্ধতি বোঝা পর্যন্ত বিষয়গুলো ধারাবাহিকভাবে সাজানো—বইটির এই দিকটি আমার কাছে সবচেয়ে গুরুত্বপূর্ণ।",
@@ -23,9 +23,9 @@ export const reviews: Review[] = [
   },
   {
     id: "sanjida-rahman",
-    name: "Sanjida Rahman",
+    name: "Nurjahan Sathi",
     rating: 4.5,
-    photo: "/reviewers/sanjida-rahman.jpg",
+    photo: "/reviewers/sanjida-rahman.jpg?v=20261117",
     approved: true,
     quote: {
       bn: "পাণ্ডুলিপি প্রস্তুতি ও একাডেমিক লেখালেখি নিয়ে বাংলায় একটি গোছানো আলোচনা নতুন গবেষকদের কাজে আসতে পারে।",
@@ -34,9 +34,9 @@ export const reviews: Review[] = [
   },
   {
     id: "fiona-chy",
-    name: "Fiona Chy.",
+    name: "Tahmina Eva",
     rating: 5,
-    photo: "/reviewers/fiona-chy.jpg",
+    photo: "/reviewers/fiona-chy.jpg?v=20261117",
     approved: true,
     quote: {
       bn: "গবেষণার নৈতিকতা, তথ্য বিশ্লেষণ এবং প্রকাশনার ধাপ—এতগুলো বিষয় একসঙ্গে উপস্থাপনের ভাবনাটি প্রশংসনীয়।",
@@ -45,9 +45,9 @@ export const reviews: Review[] = [
   },
   {
     id: "shahin-ali",
-    name: "Shahin Ali",
+    name: "NM Sabbir",
     rating: 4.5,
-    photo: "/reviewers/shahin-ali.jpg",
+    photo: "/reviewers/shahin-ali.jpg?v=20261117",
     approved: true,
     quote: {
       bn: "জার্নাল নির্বাচন ও পিয়ার রিভিউয়ের মতো বিষয়গুলো সম্পর্কে সহজ ভাষায় ধারণা পাওয়া শিক্ষার্থীদের জন্য কার্যকর হতে পারে।",
@@ -56,9 +56,9 @@ export const reviews: Review[] = [
   },
   {
     id: "ashraful",
-    name: "Ashraful",
+    name: "Nitun Saha Roy",
     rating: 5,
-    photo: "/reviewers/ashraful.jpg",
+    photo: "/reviewers/ashraful.jpg?v=20261117",
     approved: true,
     quote: {
       bn: "গবেষণার প্রাথমিক ধারণা থেকে প্রকাশনার প্রস্তুতি—পুরো প্রক্রিয়াটি বাংলায় জানতে আগ্রহীদের জন্য এমন বইয়ের বিষয়বিন্যাস প্রাসঙ্গিক।",
